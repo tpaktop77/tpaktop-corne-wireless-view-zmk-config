@@ -46,8 +46,8 @@
 
 ## 7. CI, pull request и handoff
 
-- [ ] 7.1 Закоммитить и отправить рабочую ветку, создать PR с summary, OpenSpec links и описанием использования смерженного combo PR #2; проверить URL PR
-- [ ] 7.2 Дождаться успешной GitHub Actions сборки corne_left с nice!view/Studio и corne_right с nice!view; приложить ссылки и статусы в PR/docs
-- [ ] 7.3 При CI failure исправить implementation в той же ветке и повторять проверки до двух успешных builds; проверить финальный commit SHA против PR head
-- [ ] 7.4 Перечислить в PR все оставшиеся ручные тесты владельца из `docs/test-matrix.md`, не помечая их выполненными; проверить USB, BLE, macOS Voice, slow-release, display и Studio rows
-- [ ] 7.5 Оставить OpenSpec change активным и не архивировать до аппаратного подтверждения владельцем; проверить наличие change в `openspec list`
+- [x] 7.1 Закоммитить и отправить рабочую ветку, создать PR с summary, OpenSpec links и описанием использования смерженного combo PR #2; проверить URL PR
+- [x] 7.2 Дождаться успешной GitHub Actions сборки corne_left с nice!view/Studio и corne_right с nice!view; приложить ссылки и статусы в PR/docs
+- [x] 7.3 При CI failure исправить implementation в той же ветке и повторять проверки до двух успешных builds; проверить финальный commit SHA против PR head
+- [x] 7.4 Перечислить в PR все оставшиеся ручные тесты владельца из `docs/test-matrix.md`, не помечая их выполненными; проверить USB, BLE, macOS Voice, slow-release, display и Studio rows
+- [x] 7.5 Оставить OpenSpec change активным и не архивировать до аппаратного подтверждения владельцем; проверить наличие change в `openspec list`

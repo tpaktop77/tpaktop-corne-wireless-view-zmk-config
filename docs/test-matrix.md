@@ -22,8 +22,8 @@
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | CI pending | — |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | CI pending | — |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | [job 99253964439](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964439) |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | [job 99253964437](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964437) |
 
 ## Layout и переключение
 
