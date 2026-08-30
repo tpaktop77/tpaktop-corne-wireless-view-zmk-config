@@ -14,7 +14,8 @@
                 os_action: os_action {
                         compatible = "tpak,behavior-os-action";
                         #binding-cells = <1>;
-                        bindings = <&kp>;
+                        // Placeholder satisfies &kp's binding cell; the behavior overwrites it per action.
+                        bindings = <&kp 0>;
                         display-name = "OS Action";
                 };
         };
