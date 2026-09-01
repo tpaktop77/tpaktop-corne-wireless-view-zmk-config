@@ -56,4 +56,4 @@
 
 - [x] 8.1 Сдвинуть Windows/macOS/Linux на System positions 19–21 и синхронизировать layout, OS profile, migration и test docs; проверить, что position 18 равна `&none`, а combo не изменились
 - [x] 8.2 Назначить `&kp ESC` на Graphite position 0 и синхронизировать layout, migration и test docs; проверить, что QWERTY и positional combo не изменились
-- [ ] 8.3 Выполнить `git diff --check`, OpenSpec strict validation и сборку обеих половин; затем закоммитить и отправить follow-up в существующий PR #3
+- [x] 8.3 Выполнить `git diff --check`, OpenSpec strict validation и сборку обеих половин; после merge PR #3 зафиксировать build evidence в отдельном документационном PR

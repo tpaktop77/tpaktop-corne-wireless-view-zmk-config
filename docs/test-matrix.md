@@ -2,8 +2,6 @@
 
 Статусы:
 
-- `implemented; CI pending` — реализация и статический аудит завершены, сборка ещё не подтверждена CI.
-- `CI pending` — требует GitHub Actions после push.
 - `manual pending` — должен выполнить владелец физической клавиатуры; Codex не помечает её выполненной.
 - `pass` / `fail` — подтверждённый результат с evidence.
 
@@ -22,8 +20,8 @@
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | CI pending | baseline [job 99253964439](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964439); follow-up pending |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | CI pending | baseline [job 99253964437](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964437); follow-up pending |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | follow-up [job 99814284683](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33494759869/job/99814284683) |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | follow-up [job 99814284610](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33494759869/job/99814284610) |
 
 ## Layout и переключение
 
