@@ -56,7 +56,7 @@ TAB / FUNCTION   SPACE / NAVIGATION  ·
 Верхний ряд Voyager игнорируется. Правая нижняя body-клавиша выбирает QWERTY.
 
 ```text
-·       AS(B) AS(L) AS(D) AS(W) AS(Z) | NUMLOCK AS(F) AS(O) AS(U) AS(J) ·
+ESC     AS(B) AS(L) AS(D) AS(W) AS(Z) | NUMLOCK AS(F) AS(O) AS(U) AS(J) ·
 ·       AS(N) AS(R) AS(T) AS(S) AS(G) | AS(Y)   AS(H) AS(A) AS(E) AS(I) ·
 ·       AS(Q) AS(X) AS(M) AS(C) AS(V) | AS(K)   AS(P) ·     ·     ·     →QWERTY
               SYSTEM  BSP/SYMB  DEL/NUM | TAB/FN  SPC/NAV  ·
@@ -144,13 +144,13 @@ M26 {   }   [   ]   · | '  "  :  ;  =  *
 Слой активен только при удержании левого внешнего thumb (`position 36`). Левая рука управляет Bluetooth, правая — независимым OS profile.
 
 ```text
-BT0  BT1  BT2  BT3  BT4  · | ·       ·      ·      · · ·
-·    ·    ·    ·    ·    · | WINDOWS MACOS  LINUX  · · ·
+BT0  BT1  BT2  BT3  BT4  · | ·       ·       ·      ·      · ·
+·    ·    ·    ·    ·    · | ·       WINDOWS MACOS  LINUX  · ·
 BTCLR·    ·    ·    ·    · | ·       ·      ·      · · ·
                  ▽  ▽  ▽    | ▽  ▽  ▽
 ```
 
 - BT0–BT4: `&bt BT_SEL 0..4`.
 - BT Clear: нижний внешний левый угол, position 24. Короткий tap ничего не делает; непрерывное удержание 1500 мс выполняет `&bt BT_CLR`.
-- OS selectors: positions 18–20, от внутренней стороны правой половины: Windows, macOS, Linux.
+- OS selectors: positions 19–21: Windows, macOS, Linux; position 18 остаётся пустой, поэтому Windows находится под указательным пальцем на home middle row.
 - Выбор ОС не меняет слой и не выбирает Bluetooth profile.

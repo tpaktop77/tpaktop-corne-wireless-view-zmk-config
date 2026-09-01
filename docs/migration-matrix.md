@@ -2,13 +2,13 @@
 
 Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66e34389262092cc5347da90bc7`. Target base: `master@8e885d4d28117703abbc0b027bd9686bb9c7a84e`, содержащий смерженный combo PR #2.
 
-Все включённые строки реализованы в `config/corne.keymap` и repo-local OS profile module, прошли статический аудит и сборку обеих половин; их текущий статус — `implemented; CI pass`. Аппаратные проверки остаются владельцу согласно `docs/test-matrix.md`.
+Основная миграция прошла статический аудит и сборку обеих половин. Follow-up с Escape и сдвигом OS selectors отмечен `implemented; CI pending` до повторной сборки; аппаратные проверки остаются владельцу согласно `docs/test-matrix.md`.
 
 ## Слои и общие behaviors
 
 | Source QMK file | Source QMK layer | Source physical position | Source behavior | Target ZMK layer | Target key-position | Target behavior | Status | Validation |
 |---|---:|---|---|---|---|---|---|---|
-| `6JP4n/keymap.c` | 0 | три нижних ряда Voyager | Graphite body | `GRAPHITE` 0 | 0–35 | точный Graphite, верхний ряд отброшен | implemented; CI pass | layout audit + hardware |
+| `6JP4n/keymap.c` + follow-up | 0 | три нижних ряда Voyager | Graphite body + Escape | `GRAPHITE` 0 | 0–35 | Graphite с `&kp ESC` на position 0, верхний ряд отброшен | implemented; CI pending | layout audit + hardware |
 | — | new | Corne body | минимальный QWERTY | `QWERTY` 1 | 0–35 | letters/none + `&to GRAPHITE` | implemented; CI pass | layout audit + hardware |
 | `6JP4n/keymap.c` | 0 | Graphite bottom-right | `TT(2)` в QMK | `GRAPHITE` | 35 | `&to QWERTY` | implemented; CI pass | manual switch |
 | — | new | QWERTY bottom-right | возврат | `QWERTY` | 35 | `&to GRAPHITE` | implemented; CI pass | manual switch |
@@ -19,7 +19,7 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | `6JP4n/keymap.c` | 6 | три нижних ряда | Vim/macros | `VIM` 5 | 0–41 | сохранён | implemented; CI pass | build + manual |
 | `6JP4n/keymap.c` | 7 | три нижних ряда | English Symbols | `SYMBOLS` 6 | 0–41 | сохранён, Smiles ref исправлен | implemented; CI pass | build + manual |
 | `6JP4n/keymap.c` | 9 | три нижних ряда | English Smiles | `SMILES` 7 | 0–41 | сохранён | implemented; CI pass | build + manual |
-| prior ZMK Lower + new | — | left/right body | BT + OS controls | `SYSTEM_BT` 8 | 0–35 | BT0–BT4, protected clear, OS selectors | implemented; CI pass | build + manual |
+| prior ZMK Lower + new | — | left/right body | BT + OS controls | `SYSTEM_BT` 8 | 0–35 | BT0–BT4, protected clear, OS selectors 19–21 | implemented; CI pending | build + manual |
 | target Studio | — | reserved nodes | editable capacity | 9–11 | n/a | три `status = "reserved"` | implemented; CI pass | Studio connect |
 | `6JP4n/config.h` | global | English letters | QMK Auto Shift 200 ms | `GRAPHITE`, `QWERTY` | all letter positions | ZMK hold-tap Auto Shift 250 ms | implemented; CI pass | manual USB/BLE |
 
@@ -33,9 +33,9 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | prior target Lower | 1 | left top row | `BT_SEL 3` | `SYSTEM_BT` | 3 | `&bt BT_SEL 3` | implemented; CI pass | manual USB/BLE |
 | prior target Lower | 1 | left top row | `BT_SEL 4` | `SYSTEM_BT` | 4 | `&bt BT_SEL 4` | implemented; CI pass | manual USB/BLE |
 | prior target Lower | 1 | lower external left | unprotected `BT_CLR` | `SYSTEM_BT` | 24 | tap-preferred 1500 ms hold → BT Clear | implemented; CI pass | short/long manual |
-| `modules/switch_cases.c` concept | global | right home inner | detected OS | `SYSTEM_BT` | 18 | `&os_set OS_WINDOWS` | implemented; CI pass | state/action test |
-| `modules/switch_cases.c` concept | global | right home | detected OS | `SYSTEM_BT` | 19 | `&os_set OS_MACOS` | implemented; CI pass | state/action test |
-| `modules/switch_cases.c` concept | global | right home | detected OS | `SYSTEM_BT` | 20 | `&os_set OS_LINUX` | implemented; CI pass | state/action test |
+| `modules/switch_cases.c` concept | global | right home index | detected OS | `SYSTEM_BT` | 19 | `&os_set OS_WINDOWS` | implemented; CI pending | state/action test |
+| `modules/switch_cases.c` concept | global | right home | detected OS | `SYSTEM_BT` | 20 | `&os_set OS_MACOS` | implemented; CI pending | state/action test |
+| `modules/switch_cases.c` concept | global | right home | detected OS | `SYSTEM_BT` | 21 | `&os_set OS_LINUX` | implemented; CI pending | state/action test |
 
 ## Positional combo
 

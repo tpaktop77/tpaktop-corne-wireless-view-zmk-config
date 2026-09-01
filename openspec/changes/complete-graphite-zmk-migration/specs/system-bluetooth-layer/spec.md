@@ -30,7 +30,7 @@ Bluetooth Clear SHALL находиться в нижнем внешнем лев
 - **THEN** выполняется стандартная команда ZMK `BT_CLR`
 
 ### Requirement: System layer предоставляет независимые OS selectors
-Первые три клавиши правого home row от внутренней стороны SHALL выбирать Windows, macOS и Linux соответственно. Выбор ОС MUST NOT выбирать Bluetooth profile, менять буквенный слой или автоматически связываться с endpoint.
+Три соседние клавиши правого home row на positions `19`, `20`, `21` SHALL выбирать Windows, macOS и Linux соответственно. Position `18` SHALL оставаться пустой, чтобы Windows находилась под указательным пальцем на home middle row. Выбор ОС MUST NOT выбирать Bluetooth profile, менять буквенный слой или автоматически связываться с endpoint.
 
 #### Scenario: Выбор ОС
 - **WHEN** пользователь удерживает System thumb и нажимает Windows, macOS или Linux

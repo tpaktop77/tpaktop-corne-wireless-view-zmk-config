@@ -553,13 +553,13 @@
 
                 graphite_layer {
 // -------------------------------------------------------------------------------------------------
-// |       |  B  |  L  |  D  |  W  |  Z  |   | NUM |  F  |  O  |  U  |  J  |       |
+// |  ESC  |  B  |  L  |  D  |  W  |  Z  |   | NUM |  F  |  O  |  U  |  J  |       |
 // |       |  N  |  R  |  T  |  S  |  G  |   |  Y  |  H  |  A  |  E  |  I  |       |
 // |       |  Q  |  X  |  M  |  C  |  V  |   |  K  |  P  |     |     |     | QWERTY|
 //               | SYSTEM | BSP/SYMB | DEL/NUM |   | TAB/FN | SPC/NAV |       |
                         display-name = "Graphite";
                         bindings = <
-   &none AS(B) AS(L) AS(D) AS(W) AS(Z)   &kp KP_NUMLOCK AS(F) AS(O) AS(U) AS(J) &none
+   &kp ESC AS(B) AS(L) AS(D) AS(W) AS(Z)   &kp KP_NUMLOCK AS(F) AS(O) AS(U) AS(J) &none
    &none AS(N) AS(R) AS(T) AS(S) AS(G)   AS(Y) AS(H) AS(A) AS(E) AS(I) &none
    &none AS(Q) AS(X) AS(M) AS(C) AS(V)   AS(K) AS(P) &none &none &none &to QWERTY
                   &mo SYSTEM_BT &lt SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
@@ -674,13 +674,13 @@
                 system_layer {
 // -------------------------------------------------------------------------------------------------
 // | BT0 | BT1 | BT2 | BT3 | BT4 |     |   |         |       |       |     |     |     |
-// |     |     |     |     |     |     |   | WINDOWS | MACOS | LINUX |     |     |     |
+// |     |     |     |     |     |     |   |         | WINDOWS | MACOS | LINUX |     |     |
 // | CLEAR(hold 1500 ms)    |     |     |   |         |       |       |     |     |     |
 //                           |     |     |   |         |       |       |
                         display-name = "System";
                         bindings = <
    &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none   &none &none &none &none &none &none
-   &none &none &none &none &none &none                                          &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none &none
+   &none &none &none &none &none &none                                          &none &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none
    &bt_clear_hold 0 0 &none &none &none &none &none                             &none &none &none &none &none &none
                   &trans &trans &trans   &trans &trans &trans
                         >;

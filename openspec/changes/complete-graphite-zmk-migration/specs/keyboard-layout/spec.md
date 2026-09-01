@@ -16,7 +16,7 @@
 - **THEN** ссылка использует соответствующую именованную константу
 
 ### Requirement: Graphite повторяет три нижних ряда Voyager
-Graphite SHALL содержать body-позиции `none B L D W Z | NUMLOCK F O U J none`, `none N R T S G | Y H A E I none`, `none Q X M C V | K P none none none QWERTY`. Верхний ряд Voyager SHALL быть исключён, а бывшие `F22/F23/F24` SHALL быть `&none`.
+Graphite SHALL содержать body-позиции `ESC B L D W Z | NUMLOCK F O U J none`, `none N R T S G | Y H A E I none`, `none Q X M C V | K P none none none QWERTY`. Верхний ряд Voyager SHALL быть исключён, position `0` SHALL отправлять Escape, а бывшие `F22/F23/F24` SHALL быть `&none`.
 
 #### Scenario: Проверка Graphite body
 - **WHEN** пользователь просматривает или тестирует слой Graphite

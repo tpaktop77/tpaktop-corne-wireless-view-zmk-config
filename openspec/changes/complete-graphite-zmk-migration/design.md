@@ -53,7 +53,7 @@
 11 STUDIO_EXTRA_3
 ```
 
-Graphite остаётся default layer 0. `&to QWERTY` поднимает альтернативный слой над Graphite, `&to GRAPHITE` отключает его и возвращает default. Это обеспечивает предсказуемый reset в Graphite без persistent settings. Альтернатива с двумя default layers отвергнута: она сложнее и допускает сохранение нежелательного base state.
+Graphite остаётся default layer 0. Follow-up назначает `&kp ESC` на Graphite position 0 вместо исходного `&none`; QWERTY position 0 остаётся без изменения. `&to QWERTY` поднимает альтернативный слой над Graphite, `&to GRAPHITE` отключает его и возвращает default. Это обеспечивает предсказуемый reset в Graphite без persistent settings. Альтернатива с двумя default layers отвергнута: она сложнее и допускает сохранение нежелательного base state.
 
 Numbers/Navigation/Function/Vim/Symbols/Smiles переносятся без функциональной переработки; меняются только индексы и ссылки. Lower/Raise удаляются. Reserved nodes остаются последними для Studio.
 
@@ -74,7 +74,7 @@ Numbers/Navigation/Function/Vim/Symbols/Smiles переносятся без ф�
 
 ### 3. System/Bluetooth layer вместо Lower/Raise
 
-System использует body positions 0–4 для BT0–BT4; position 24 — защищённый BT Clear; positions 18–20 — Windows/macOS/Linux. Остальные body-позиции `&none`, thumbs прозрачны только для корректного release уже нажатого momentary entry.
+System использует body positions 0–4 для BT0–BT4; position 24 — защищённый BT Clear; positions 19–21 — Windows/macOS/Linux. Position 18 остаётся `&none`: OS selectors сдвинуты на одну клавишу вправо, чтобы Windows находилась под указательным пальцем на home middle row. Остальные body-позиции `&none`, thumbs прозрачны только для корректного release уже нажатого momentary entry.
 
 BT Clear оборачивается в zero-parameter macro, вызывающий `&bt BT_CLR`. Отдельный tap-preferred hold-tap с `tapping-term-ms = 1500` вызывает macro только как hold action, а короткий tap вызывает `&none`. Tap-preferred выбран специально: нажатие другой клавиши до 1500 мс не должно преждевременно очистить профиль. Прямая передача `&bt` в hold-tap отвергнута, потому что `&bt` имеет два binding cells.
 

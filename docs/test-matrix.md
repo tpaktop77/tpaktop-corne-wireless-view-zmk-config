@@ -22,8 +22,8 @@
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | [job 99253964439](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964439) |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | [job 99253964437](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964437) |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | CI pending | baseline [job 99253964439](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964439); follow-up pending |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | CI pending | baseline [job 99253964437](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33310273401/job/99253964437); follow-up pending |
 
 ## Layout и переключение
 
@@ -31,7 +31,8 @@
 |---|---|---|---|
 | Reboot default | USB и BLE | Graphite активен, QWERTY не выбран | manual pending |
 | Graphite 26 letters | USB и BLE | три ряда соответствуют Oryx, Num Lock на position 6 | manual pending |
-| Graphite empty positions | USB и BLE | positions 0,11,12,23,24,32–34 не печатают keycodes | manual pending |
+| Graphite Escape | USB и BLE | position 0 отправляет Escape | manual pending |
+| Graphite empty positions | USB и BLE | positions 11,12,23,24,32–34 не печатают keycodes | manual pending |
 | Graphite → QWERTY | USB и BLE | position 35 прямо выбирает QWERTY | manual pending |
 | QWERTY 26 letters | USB и BLE | только стандартные английские буквы | manual pending |
 | QWERTY forbidden body keys | USB и BLE | нет Tab/Esc/Ctrl/Shift/punctuation | manual pending |
@@ -126,6 +127,7 @@
 | BT Clear + другая клавиша <1500 ms | профиль не очищается | manual pending |
 | BT Clear hold ≥1500 ms | выполняется BT_CLR | manual pending |
 | release System thumb | слой закрывается | manual pending |
+| OS selector positions | position 18 ничего не делает; positions 19/20/21 выбирают Windows/macOS/Linux | manual pending |
 
 ## OS profile и действия
 

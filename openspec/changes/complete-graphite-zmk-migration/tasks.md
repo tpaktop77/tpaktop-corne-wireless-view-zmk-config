@@ -51,3 +51,9 @@
 - [x] 7.3 При CI failure исправить implementation в той же ветке и повторять проверки до двух успешных builds; проверить финальный commit SHA против PR head
 - [x] 7.4 Перечислить в PR все оставшиеся ручные тесты владельца из `docs/test-matrix.md`, не помечая их выполненными; проверить USB, BLE, macOS Voice, slow-release, display и Studio rows
 - [x] 7.5 Оставить OpenSpec change активным и не архивировать до аппаратного подтверждения владельцем; проверить наличие change в `openspec list`
+
+## 8. Follow-up: позиция OS selectors
+
+- [x] 8.1 Сдвинуть Windows/macOS/Linux на System positions 19–21 и синхронизировать layout, OS profile, migration и test docs; проверить, что position 18 равна `&none`, а combo не изменились
+- [x] 8.2 Назначить `&kp ESC` на Graphite position 0 и синхронизировать layout, migration и test docs; проверить, что QWERTY и positional combo не изменились
+- [ ] 8.3 Выполнить `git diff --check`, OpenSpec strict validation и сборку обеих половин; затем закоммитить и отправить follow-up в существующий PR #3

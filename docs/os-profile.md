@@ -53,7 +53,7 @@ OS profile — независимое внутреннее состояние cu
 
 ## System layer selectors
 
-На System positions `18`, `19`, `20` находятся:
+На System positions `19`, `20`, `21` находятся:
 
 ```text
 &os_set OS_WINDOWS
@@ -61,7 +61,7 @@ OS profile — независимое внутреннее состояние cu
 &os_set OS_LINUX
 ```
 
-Они расположены на первых трёх клавишах правого home row от внутренней стороны. Behavior работает на central half и не меняет active keymap layer.
+Это три соседние клавиши правого home row; position `18` остаётся пустой, а Windows на position `19` находится под указательным пальцем. Behavior работает на central half и не меняет active keymap layer.
 
 ## Ограничения текущего этапа
 
