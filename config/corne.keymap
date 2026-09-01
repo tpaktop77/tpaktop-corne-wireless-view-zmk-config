@@ -5,8 +5,26 @@
  */
 
 #include <behaviors.dtsi>
+#include <behaviors/os_profile.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/tpak/os_profile.h>
+
+#define GRAPHITE 0
+#define QWERTY 1
+#define NUMBERS 2
+#define NAVIGATION 3
+#define FUNCTION 4
+#define VIM 5
+#define SYMBOLS 6
+#define SMILES 7
+#define SYSTEM_BT 8
+#define STUDIO_EXTRA_1 9
+#define STUDIO_EXTRA_2 10
+#define STUDIO_EXTRA_3 11
+
+// Tap a letter normally; hold it for 250 ms to send Left Shift + letter.
+#define AS(keycode) &as LS(keycode) keycode
 
 // Match QMK quick-tap repeat behavior for layer-tap keys.
 &lt {
@@ -14,7 +32,38 @@
 };
 
 / {
+        behaviors {
+                as: auto_shift {
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <2>;
+                        tapping-term-ms = <250>;
+                        quick-tap-ms = <0>;
+                        flavor = "tap-preferred";
+                        bindings = <&kp>, <&kp>;
+                        display-name = "Auto Shift";
+                };
+
+                bt_clear_hold: bt_clear_hold {
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <2>;
+                        tapping-term-ms = <1500>;
+                        quick-tap-ms = <0>;
+                        flavor = "tap-preferred";
+                        bindings = <&bt_clear_macro>, <&none>;
+                        display-name = "Hold to Clear Bluetooth";
+                };
+        };
+
         macros {
+                // Clears the active Bluetooth profile; invoked only after a protected hold.
+                bt_clear_macro: bt_clear_macro {
+                        compatible = "zmk,behavior-macro";
+                        #binding-cells = <0>;
+                        wait-ms = <0>;
+                        tap-ms = <0>;
+                        bindings = <&bt BT_CLR>;
+                };
+
                 // Types "  e" (Space, Space, E).
                 oryx_m11: oryx_m11 {
                         compatible = "zmk,behavior-macro";
@@ -239,14 +288,14 @@
                         timeout-ms = <50>;
                         key-positions = <19 20 21>;
                         bindings = <&kp RET>;
-                        layers = <0 1 2>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
                 tab_combo {
                         timeout-ms = <50>;
                         key-positions = <14 15 16>;
                         bindings = <&kp TAB>;
-                        layers = <0 1 2>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
                 // Oryx N+S: toggle Caps Word on the base layer.
@@ -254,7 +303,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 16>;
                         bindings = <&caps_word>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
                 // Oryx N+G: toggle Caps Lock on the base layer.
@@ -262,7 +311,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 17>;
                         bindings = <&kp CAPSLOCK>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
                 // Oryx 7+8+9: type minus on the Numbers layer.
@@ -270,7 +319,7 @@
                         timeout-ms = <50>;
                         key-positions = <7 8 9>;
                         bindings = <&kp MINUS>;
-                        layers = <3>;
+                        layers = <NUMBERS>;
                 };
 
                 // Oryx 4+5+6: type equals on the Numbers layer.
@@ -278,7 +327,7 @@
                         timeout-ms = <50>;
                         key-positions = <19 20 21>;
                         bindings = <&kp EQUAL>;
-                        layers = <3>;
+                        layers = <NUMBERS>;
                 };
 
                 // Oryx 1+2+3: type plus on the Numbers layer.
@@ -286,7 +335,7 @@
                         timeout-ms = <50>;
                         key-positions = <31 32 33>;
                         bindings = <&kp PLUS>;
-                        layers = <3>;
+                        layers = <NUMBERS>;
                 };
 
                 // Oryx 4+5+6+Dot: type slash on the Numbers layer.
@@ -294,7 +343,7 @@
                         timeout-ms = <50>;
                         key-positions = <19 20 21 22>;
                         bindings = <&kp FSLH>;
-                        layers = <3>;
+                        layers = <NUMBERS>;
                 };
 
                 // Oryx 1+2+3+Equal: type asterisk on the Numbers layer.
@@ -302,23 +351,24 @@
                         timeout-ms = <50>;
                         key-positions = <31 32 33 34>;
                         bindings = <&kp ASTRK>;
-                        layers = <3>;
+                        layers = <NUMBERS>;
                 };
 
                 // Oryx G+Z: hold the English Smiles layer.
                 smiles_layer_combo {
                         timeout-ms = <50>;
                         key-positions = <5 17>;
-                        bindings = <&mo 8>;
-                        layers = <0>;
+                        bindings = <&mo SMILES>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx H+I: activate the Vim layer for one keypress.
                 vim_layer_combo {
                         timeout-ms = <50>;
                         key-positions = <19 22>;
-                        bindings = <&sl 6>;
-                        layers = <0>;
+                        bindings = <&sl VIM>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
                 // Oryx Q+N: hold Left Alt.
@@ -326,7 +376,8 @@
                         timeout-ms = <50>;
                         key-positions = <13 25>;
                         bindings = <&kp LALT>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx X+R: hold Left GUI.
@@ -334,7 +385,8 @@
                         timeout-ms = <50>;
                         key-positions = <14 26>;
                         bindings = <&kp LGUI>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx M+T: hold Left Shift.
@@ -342,7 +394,8 @@
                         timeout-ms = <50>;
                         key-positions = <15 27>;
                         bindings = <&kp LSHIFT>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx C+S: hold Left Control.
@@ -350,7 +403,8 @@
                         timeout-ms = <50>;
                         key-positions = <16 28>;
                         bindings = <&kp LCTRL>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx P+H: hold Right Control.
@@ -358,7 +412,8 @@
                         timeout-ms = <50>;
                         key-positions = <19 31>;
                         bindings = <&kp RCTRL>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx F22+A: hold Right Shift.
@@ -366,7 +421,8 @@
                         timeout-ms = <50>;
                         key-positions = <20 32>;
                         bindings = <&kp RSHIFT>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx F23+E: hold Right GUI.
@@ -374,7 +430,8 @@
                         timeout-ms = <50>;
                         key-positions = <21 33>;
                         bindings = <&kp RGUI>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
                 // Oryx F24+I: hold Right Alt.
@@ -382,158 +439,145 @@
                         timeout-ms = <50>;
                         key-positions = <22 34>;
                         bindings = <&kp RALT>;
-                        layers = <0>;
+                        layers = <GRAPHITE QWERTY>;
+                        slow-release;
                 };
 
-                // Oryx R+L: Windows Copy (Ctrl+C).
-                copy_windows_combo {
+                // Oryx R+L: OS-aware Copy.
+                copy_combo {
                         timeout-ms = <50>;
                         key-positions = <2 14>;
-                        bindings = <&kp LC(C)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_COPY>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx T+D: Windows Paste (Ctrl+V).
-                paste_windows_combo {
+                // Oryx T+D: OS-aware Paste.
+                paste_combo {
                         timeout-ms = <50>;
                         key-positions = <3 15>;
-                        bindings = <&kp LC(V)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_PASTE>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx R+L+T+D: Windows Cut (Ctrl+X).
-                cut_windows_combo {
+                // Oryx R+L+T+D: OS-aware Cut.
+                cut_combo {
                         timeout-ms = <50>;
                         key-positions = <2 3 14 15>;
-                        bindings = <&kp LC(X)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_CUT>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx A+O: Windows Undo (Ctrl+Z).
-                undo_windows_combo {
+                // Oryx A+O: OS-aware Undo.
+                undo_combo {
                         timeout-ms = <50>;
                         key-positions = <8 20>;
-                        bindings = <&kp LC(Z)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_UNDO>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx E+U: Windows Redo (Ctrl+Shift+Z).
-                redo_windows_combo {
+                // Oryx E+U: OS-aware Redo.
+                redo_combo {
                         timeout-ms = <50>;
                         key-positions = <9 21>;
-                        bindings = <&kp LC(LS(Z))>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_REDO>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx Y+H+A: Windows voice typing (GUI+H).
-                voice_windows_combo {
+                // Oryx Y+H+A: OS-aware voice command.
+                voice_combo {
                         timeout-ms = <50>;
                         key-positions = <18 19 20>;
-                        bindings = <&kp LG(H)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_VOICE>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx N+R+T: delete the previous word on Windows (Ctrl+Backspace).
-                word_backspace_windows_combo {
+                // Oryx N+R+T: OS-aware deletion of the previous word.
+                word_backspace_combo {
                         timeout-ms = <50>;
                         key-positions = <13 14 15>;
-                        bindings = <&kp LC(BSPC)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_WORD_BACKSPACE>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx A+E+I: delete the next word on Windows (Ctrl+Delete).
-                word_delete_windows_combo {
+                // Oryx A+E+I: OS-aware deletion of the next word.
+                word_delete_combo {
                         timeout-ms = <50>;
                         key-positions = <20 21 22>;
-                        bindings = <&kp LC(DEL)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_WORD_DELETE>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx Q+X+M: move one word left on Windows (Ctrl+Left).
-                word_previous_windows_combo {
+                // Oryx Q+X+M: OS-aware movement to the previous word.
+                word_previous_combo {
                         timeout-ms = <50>;
                         key-positions = <25 26 27>;
-                        bindings = <&kp LC(LEFT)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_WORD_PREVIOUS>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx F22+F23+F24: move one word right on Windows (Ctrl+Right).
-                word_next_windows_combo {
+                // Oryx F22+F23+F24 positions: OS-aware movement to the next word.
+                word_next_combo {
                         timeout-ms = <50>;
                         key-positions = <32 33 34>;
-                        bindings = <&kp LC(RIGHT)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_WORD_NEXT>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx H+A+E+I: Windows task switcher (Alt+Tab), base layer only.
-                alt_tab_windows_combo {
+                // Oryx H+A+E+I: OS-aware application switcher.
+                app_switch_combo {
                         timeout-ms = <50>;
                         key-positions = <19 20 21 22>;
-                        bindings = <&kp LA(TAB)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_APP_SWITCH>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx N+R+T+S: Windows task view (GUI+Tab), base layer only.
-                alt_win_windows_combo {
+                // Oryx N+R+T+S: OS-aware task view.
+                task_view_combo {
                         timeout-ms = <50>;
                         key-positions = <13 14 15 16>;
-                        bindings = <&kp LG(TAB)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_TASK_VIEW>;
+                        layers = <GRAPHITE QWERTY>;
                 };
 
-                // Oryx N+B: Windows Select All (Ctrl+A).
-                select_all_windows_combo {
+                // Oryx N+B: OS-aware Select All.
+                select_all_combo {
                         timeout-ms = <50>;
                         key-positions = <1 13>;
-                        bindings = <&kp LC(A)>;
-                        layers = <0>;
+                        bindings = <&os_action OS_ACTION_SELECT_ALL>;
+                        layers = <GRAPHITE QWERTY>;
                 };
         };
 
         keymap {
                 compatible = "zmk,keymap";
 
-                default_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                  | LWR | BSP/7 | DEL/3 |   | TAB/5 | SPC/4 | RSE |
-                        display-name = "Base";
+                graphite_layer {
+// -------------------------------------------------------------------------------------------------
+// |  ESC  |  B  |  L  |  D  |  W  |  Z  |   | NUM |  F  |  O  |  U  |  J  |       |
+// |       |  N  |  R  |  T  |  S  |  G  |   |  Y  |  H  |  A  |  E  |  I  |       |
+// |       |  Q  |  X  |  M  |  C  |  V  |   |  K  |  P  |     |     |     | QWERTY|
+//               | SYSTEM | BSP/SYMB | DEL/NUM |   | TAB/FN | SPC/NAV |       |
+                        display-name = "Graphite";
                         bindings = <
-   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                  &mo 1 &lt 7 BSPC &lt 3 DEL   &lt 5 TAB &lt 4 SPACE &mo 2
-                        >;
-                };
-                lower_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                  |     | BSP/7 | DEL/3 |   | TAB/5 | SPC/4 | RSE |
-                        display-name = "Lower";
-                        bindings = <
-   &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                   &trans       &trans       &trans         &trans   &trans   &trans
+   &kp ESC AS(B) AS(L) AS(D) AS(W) AS(Z)   &kp KP_NUMLOCK AS(F) AS(O) AS(U) AS(J) &none
+   &none AS(N) AS(R) AS(T) AS(S) AS(G)   AS(Y) AS(H) AS(A) AS(E) AS(I) &none
+   &none AS(Q) AS(X) AS(M) AS(C) AS(V)   AS(K) AS(P) &none &none &none &to QWERTY
+                  &mo SYSTEM_BT &lt SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
                         >;
                 };
 
-                raise_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                  | LWR | BSP/7 | DEL/3 |   | TAB/5 | SPC/4 |     |
-                        display-name = "Raise";
+                qwerty_layer {
+// -------------------------------------------------------------------------------------------------
+// |       |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  |       |
+// |       |  A  |  S  |  D  |  F  |  G  |   |  H  |  J  |  K  |  L  |     |       |
+// |       |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M  |     |     |     |GRAPHITE|
+//               | SYSTEM | BSP/SYMB | DEL/NUM |   | TAB/FN | SPC/NAV |       |
+                        display-name = "QWERTY";
                         bindings = <
-   &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                          &trans   &trans &trans   &trans &trans &trans
+   &none AS(Q) AS(W) AS(E) AS(R) AS(T)   AS(Y) AS(U) AS(I) AS(O) AS(P) &none
+   &none AS(A) AS(S) AS(D) AS(F) AS(G)   AS(H) AS(J) AS(K) AS(L) &none &none
+   &none AS(Z) AS(X) AS(C) AS(V) AS(B)   AS(N) AS(M) &none &none &none &to GRAPHITE
+                  &mo SYSTEM_BT &lt SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
                         >;
                 };
 
@@ -548,7 +592,7 @@
    &kp RET &kp LESS_THAN &kp GREATER_THAN &kp LPAR &kp RPAR &none   &kp EQUAL &kp N7 &kp N8 &kp N9 &none &kp MINUS
    &kp TAB &kp LALT &kp LGUI &kp LSHFT &kp LCTRL &none              &none &kp N4 &kp N5 &kp N6 &kp DOT &kp FSLH
    &none &kp LBRC &kp RBRC &kp LBKT &kp RBKT &none                  &kp DOT &kp N1 &kp N2 &kp N3 &kp EQUAL &kp ASTRK
-                  &trans &trans &trans   &lt 6 ESC &kp N0 &trans
+                  &trans &trans &trans   &lt VIM ESC &kp N0 &trans
                         >;
                 };
 
@@ -578,7 +622,7 @@
    &kp RET &kp F1 &kp F2 &kp F3 &kp F4 &kp F5                 &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &none
    &kp TAB &kp LALT &kp LGUI &kp LSHFT &kp LCTRL &none        &none &kp RCTRL &kp RSHFT &kp RGUI &kp RALT &none
    &none &kp F11 &kp F12 &kp F13 &kp F14 &kp F15              &kp F16 &kp F17 &kp F18 &kp F19 &kp F20 &none
-                  &trans &trans &lt 6 DEL   &trans &trans &trans
+                  &trans &trans &lt VIM DEL   &trans &trans &trans
                         >;
                 };
 
@@ -608,7 +652,7 @@
    &kp GRAVE &kp LESS_THAN &kp GREATER_THAN &kp LPAR &kp RPAR &none   &kp HASH &kp UNDER &kp MINUS &kp FSLH &kp BSLH &kp MINUS
    &oryx_m22 &oryx_m23 &oryx_m24 &oryx_m25 &kp FSLH &kp PIPE         &kp AT &kp DOT &kp COMMA &kp EXCL &kp QMARK &kp FSLH
    &oryx_m26 &kp LBRC &kp RBRC &kp LBKT &kp RBKT &none               &kp SQT &kp DQT &kp COLON &kp SEMI &kp EQUAL &kp ASTRK
-                  &trans &trans &trans   &trans &lt 8 SPACE &trans
+                  &trans &trans &trans   &trans &lt SMILES SPACE &trans
                         >;
                 };
 
@@ -627,15 +671,30 @@
                         >;
                 };
 
-                extra_1 {
+                system_layer {
+// -------------------------------------------------------------------------------------------------
+// | BT0 | BT1 | BT2 | BT3 | BT4 |     |   |         |       |       |     |     |     |
+// |     |     |     |     |     |     |   |         | WINDOWS | MACOS | LINUX |     |     |
+// | CLEAR(hold 1500 ms)    |     |     |   |         |       |       |     |     |     |
+//                           |     |     |   |         |       |       |
+                        display-name = "System";
+                        bindings = <
+   &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none   &none &none &none &none &none &none
+   &none &none &none &none &none &none                                          &none &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none
+   &bt_clear_hold 0 0 &none &none &none &none &none                             &none &none &none &none &none &none
+                  &trans &trans &trans   &trans &trans &trans
+                        >;
+                };
+
+                studio_extra_1 {
                         status = "reserved";
                 };
 
-                extra_2 {
+                studio_extra_2 {
                         status = "reserved";
                 };
 
-                extra_3 {
+                studio_extra_3 {
                         status = "reserved";
                 };
         };
