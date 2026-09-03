@@ -1,8 +1,8 @@
 # Матрица миграции QMK/Oryx → ZMK
 
-Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66e34389262092cc5347da90bc7`. Target base: `master@23975abebb15386678195a33b08ee3bf04ec6f75`. Повторная проверка перед русской миграцией: default branches `main`/`master`, открытых PR в обоих репозиториях нет, рабочая ветка `20260901__migrate_russian_layers` не является `master`.
+Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66e34389262092cc5347da90bc7`. Исходная русская миграция смержена через PR #5; база исправления — `master@330fb1029ebb8c7e2d113bea1559c785f4b4f980`, рабочая ветка `20260903__fix_russian_thumb_layer_priority` не является `master`.
 
-Основная миграция и follow-up с Escape/сдвигом OS selectors прошли статический аудит и сборку обеих половин; аппаратные проверки остаются владельцу согласно `docs/test-matrix.md`.
+Основная миграция и follow-up с Escape/сдвигом OS selectors прошли статический аудит и сборку обеих половин. Аппаратная проверка после merge обнаружила, что `RUSSIAN = 9` маскировал `NAVIGATION = 3` и другие общие overlay-слои с меньшими индексами. Исправление меняет только именованные индексы и порядок layer nodes; сами thumb bindings и содержимое overlay не меняются. Повторные аппаратные проверки остаются владельцу согласно `docs/test-matrix.md`.
 
 ## Слои и общие behaviors
 
@@ -12,16 +12,17 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | — | new | Corne body | минимальный QWERTY | `QWERTY` 1 | 0–35 | letters/none + `&to GRAPHITE` | implemented; CI pass | layout audit + hardware |
 | `6JP4n/keymap.c` | 0 | Graphite bottom-right | `TT(2)` в QMK | `GRAPHITE` | 35 | `&to QWERTY` | implemented; CI pass | manual switch |
 | — | new | QWERTY bottom-right | возврат | `QWERTY` | 35 | `&to GRAPHITE` | implemented; CI pass | manual switch |
-| `6JP4n/keymap.c` | 0 | thumbs | layer taps | `GRAPHITE`, `QWERTY` | 36–41 | System; BSP/Symbols; DEL/Numbers; TAB/Function; Space/Navigation; none | implemented; CI pass | manual thumb matrix |
-| `6JP4n/keymap.c` | 3 | три нижних ряда | Numbers | `NUMBERS` 2 | 0–41 | сохранён, ссылки именованы | implemented; CI pass | build + manual |
-| `6JP4n/keymap.c` | 4 | три нижних ряда | Navigation/media | `NAVIGATION` 3 | 0–41 | migrated, OS adaptation deferred | implemented; CI pass | build + regression |
-| `6JP4n/keymap.c` | 5 | три нижних ряда | Function | `FUNCTION` 4 | 0–41 | сохранён, VIM ref исправлен | implemented; CI pass | build + manual |
-| `6JP4n/keymap.c` | 6 | три нижних ряда | Vim/macros | `VIM` 5 | 0–41 | сохранён | implemented; CI pass | build + manual |
-| `6JP4n/keymap.c` | 7 | три нижних ряда | English Symbols | `SYMBOLS` 6 | 0–41 | сохранён, Smiles ref исправлен | implemented; CI pass | build + manual |
-| `6JP4n/keymap.c` | 9 | три нижних ряда | English Smiles | `SMILES` 7 | 0–41 | сохранён | implemented; CI pass | build + manual |
-| prior ZMK Lower + new | — | left/right body | BT + OS controls | `SYSTEM_BT` 8 | 0–35 | BT0–BT4, protected clear, OS selectors 19–21 | implemented; CI pass | build + manual |
+| `6JP4n/keymap.c` | 0/1 | thumbs | layer taps | `GRAPHITE`, `QWERTY`, `RUSSIAN` | 36–41 | System; BSP/language Symbols; DEL/Numbers; TAB/Function; Space/Navigation; none | priority fix implemented; build pending | static priority audit + manual USB/BLE |
+| `6JP4n/keymap.c` | 1 | три нижних ряда | Russian–PC body | `RUSSIAN` 2 | 0–41 | русская база ниже всех доступных с неё overlay | priority fix implemented; build pending | node-order audit + manual thumbs |
+| `6JP4n/keymap.c` | 3 | три нижних ряда | Numbers | `NUMBERS` 3 | 0–41 | сохранён, ссылки именованы | implemented; CI pass | build + manual |
+| `6JP4n/keymap.c` | 4 | три нижних ряда | Navigation/media | `NAVIGATION` 4 | 0–41 | migrated, OS adaptation deferred | implemented; CI pass | build + regression |
+| `6JP4n/keymap.c` | 5 | три нижних ряда | Function | `FUNCTION` 5 | 0–41 | сохранён, VIM ref исправлен | implemented; CI pass | build + manual |
+| `6JP4n/keymap.c` | 6 | три нижних ряда | Vim/macros | `VIM` 6 | 0–41 | сохранён | implemented; CI pass | build + manual |
+| `6JP4n/keymap.c` | 7 | три нижних ряда | English Symbols | `SYMBOLS` 7 | 0–41 | сохранён, Smiles ref исправлен | implemented; CI pass | build + manual |
+| `6JP4n/keymap.c` | 9 | три нижних ряда | English Smiles | `SMILES` 8 | 0–41 | сохранён | implemented; CI pass | build + manual |
+| prior ZMK Lower + new | — | left/right body | BT + OS controls | `SYSTEM_BT` 11 | 0–35 | BT0–BT4, protected clear, OS selectors 19–21 | implemented; CI pass | build + manual |
 | target Studio | — | reserved nodes | editable capacity | 12–14 | n/a | три `status = "reserved"` после русских слоёв | implemented; CI pass | Studio connect + build |
-| `6JP4n/config.h` | global | English letters | QMK Auto Shift 200 ms | `GRAPHITE`, `QWERTY` | all letter positions | ZMK hold-tap Auto Shift 250 ms | implemented; CI pass | manual USB/BLE |
+| `6JP4n/config.h` | global | English/Russian letters | QMK Auto Shift 200 ms | `GRAPHITE`, `QWERTY`, `RUSSIAN` | all letter positions | ZMK hold-tap Auto Shift 300 ms; thumb `&lt.quick-tap-ms` остаётся 250 мс | tuned; build pending | false-positive + intentional hold USB/BLE |
 
 ## Русский базовый слой
 
@@ -29,39 +30,39 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 
 | Source QMK file | Source QMK layer | Source physical position | Source behavior | Target ZMK layer | Target key-position | Target behavior | Status | Validation |
 |---|---:|---|---|---|---:|---|---|---|
-| `keymap.c` + `i18n.h` | 1 | row 1 col 1 | `RU_SHTI = KC_Q` → Й | `RUSSIAN` 9 | 1 | `AS(Q)` → й/Й | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 2 | `RU_TSE = KC_W` → Ц | `RUSSIAN` 9 | 2 | `AS(W)` → ц/Ц | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 3 | `RU_U = KC_E` → У | `RUSSIAN` 9 | 3 | `AS(E)` → у/У | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 4 | `RU_KA = KC_R` → К | `RUSSIAN` 9 | 4 | `AS(R)` → к/К | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 5 | `RU_IE = KC_T` → Е | `RUSSIAN` 9 | 5 | `AS(T)` → е/Е | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 6 | `RU_EN = KC_Y` → Н | `RUSSIAN` 9 | 6 | `AS(Y)` → н/Н | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 7 | `RU_GHE = KC_U` → Г | `RUSSIAN` 9 | 7 | `AS(U)` → г/Г | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 8 | `RU_SHA = KC_I` → Ш | `RUSSIAN` 9 | 8 | `AS(I)` → ш/Ш | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 9 | `RU_SHCH = KC_O` → Щ | `RUSSIAN` 9 | 9 | `AS(O)` → щ/Щ | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 10 | `RU_ZE = KC_P` → З | `RUSSIAN` 9 | 10 | `AS(P)` → з/З | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 1 col 11 | `RU_HA = KC_LBRC` → Х | `RUSSIAN` 9 | 11 | `AS(LBKT)` → х/Х | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 1 | `RU_EF = KC_A` → Ф | `RUSSIAN` 9 | 13 | `AS(A)` → ф/Ф | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 2 | `RU_YERU = KC_S` → Ы | `RUSSIAN` 9 | 14 | `AS(S)` → ы/Ы | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 3 | `RU_VE = KC_D` → В | `RUSSIAN` 9 | 15 | `AS(D)` → в/В | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 4 | `RU_A = KC_F` → А | `RUSSIAN` 9 | 16 | `AS(F)` → а/А | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 5 | `RU_PE = KC_G` → П | `RUSSIAN` 9 | 17 | `AS(G)` → п/П | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 6 | `RU_ER = KC_H` → Р | `RUSSIAN` 9 | 18 | `AS(H)` → р/Р | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 7 | `RU_O = KC_J` → О | `RUSSIAN` 9 | 19 | `AS(J)` → о/О | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 8 | `RU_EL = KC_K` → Л | `RUSSIAN` 9 | 20 | `AS(K)` → л/Л | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 9 | `RU_DE = KC_L` → Д | `RUSSIAN` 9 | 21 | `AS(L)` → д/Д | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 10 | `RU_ZHE = KC_SCLN` → Ж | `RUSSIAN` 9 | 22 | `AS(SEMI)` → ж/Ж | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 2 col 11 | `RU_E = KC_QUOT` → Э | `RUSSIAN` 9 | 23 | `AS(SQT)` → э/Э | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 1 | `RU_YA = KC_Z` → Я | `RUSSIAN` 9 | 25 | `AS(Z)` → я/Я | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 2 | `RU_CHE = KC_X` → Ч | `RUSSIAN` 9 | 26 | `AS(X)` → ч/Ч | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 3 | `RU_ES = KC_C` → С | `RUSSIAN` 9 | 27 | `AS(C)` → с/С | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 4 | `RU_EM = KC_V` → М | `RUSSIAN` 9 | 28 | `AS(V)` → м/М | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 5 | `RU_I = KC_B` → И | `RUSSIAN` 9 | 29 | `AS(B)` → и/И | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 6 | `RU_TE = KC_N` → Т | `RUSSIAN` 9 | 30 | `AS(N)` → т/Т | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 7 | `RU_SOFT = KC_M` → Ь | `RUSSIAN` 9 | 31 | `AS(M)` → ь/Ь | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 8 | `RU_BE = KC_COMM` → Б | `RUSSIAN` 9 | 32 | `AS(COMMA)` → б/Б | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 9 | `RU_YU = KC_DOT` → Ю | `RUSSIAN` 9 | 33 | `AS(DOT)` → ю/Ю | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 10 | `RU_YO = KC_GRV` → Ё | `RUSSIAN` 9 | 34 | `AS(GRAVE)` → ё/Ё | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 1 | row 3 col 11 | `RU_HARD = KC_RBRC` → Ъ | `RUSSIAN` 9 | 35 | `AS(RBKT)` → ъ/Ъ | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 1 | `RU_SHTI = KC_Q` → Й | `RUSSIAN` 2 | 1 | `AS(Q)` → й/Й | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 2 | `RU_TSE = KC_W` → Ц | `RUSSIAN` 2 | 2 | `AS(W)` → ц/Ц | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 3 | `RU_U = KC_E` → У | `RUSSIAN` 2 | 3 | `AS(E)` → у/У | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 4 | `RU_KA = KC_R` → К | `RUSSIAN` 2 | 4 | `AS(R)` → к/К | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 5 | `RU_IE = KC_T` → Е | `RUSSIAN` 2 | 5 | `AS(T)` → е/Е | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 6 | `RU_EN = KC_Y` → Н | `RUSSIAN` 2 | 6 | `AS(Y)` → н/Н | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 7 | `RU_GHE = KC_U` → Г | `RUSSIAN` 2 | 7 | `AS(U)` → г/Г | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 8 | `RU_SHA = KC_I` → Ш | `RUSSIAN` 2 | 8 | `AS(I)` → ш/Ш | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 9 | `RU_SHCH = KC_O` → Щ | `RUSSIAN` 2 | 9 | `AS(O)` → щ/Щ | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 10 | `RU_ZE = KC_P` → З | `RUSSIAN` 2 | 10 | `AS(P)` → з/З | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 1 col 11 | `RU_HA = KC_LBRC` → Х | `RUSSIAN` 2 | 11 | `AS(LBKT)` → х/Х | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 1 | `RU_EF = KC_A` → Ф | `RUSSIAN` 2 | 13 | `AS(A)` → ф/Ф | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 2 | `RU_YERU = KC_S` → Ы | `RUSSIAN` 2 | 14 | `AS(S)` → ы/Ы | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 3 | `RU_VE = KC_D` → В | `RUSSIAN` 2 | 15 | `AS(D)` → в/В | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 4 | `RU_A = KC_F` → А | `RUSSIAN` 2 | 16 | `AS(F)` → а/А | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 5 | `RU_PE = KC_G` → П | `RUSSIAN` 2 | 17 | `AS(G)` → п/П | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 6 | `RU_ER = KC_H` → Р | `RUSSIAN` 2 | 18 | `AS(H)` → р/Р | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 7 | `RU_O = KC_J` → О | `RUSSIAN` 2 | 19 | `AS(J)` → о/О | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 8 | `RU_EL = KC_K` → Л | `RUSSIAN` 2 | 20 | `AS(K)` → л/Л | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 9 | `RU_DE = KC_L` → Д | `RUSSIAN` 2 | 21 | `AS(L)` → д/Д | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 10 | `RU_ZHE = KC_SCLN` → Ж | `RUSSIAN` 2 | 22 | `AS(SEMI)` → ж/Ж | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 2 col 11 | `RU_E = KC_QUOT` → Э | `RUSSIAN` 2 | 23 | `AS(SQT)` → э/Э | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 1 | `RU_YA = KC_Z` → Я | `RUSSIAN` 2 | 25 | `AS(Z)` → я/Я | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 2 | `RU_CHE = KC_X` → Ч | `RUSSIAN` 2 | 26 | `AS(X)` → ч/Ч | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 3 | `RU_ES = KC_C` → С | `RUSSIAN` 2 | 27 | `AS(C)` → с/С | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 4 | `RU_EM = KC_V` → М | `RUSSIAN` 2 | 28 | `AS(V)` → м/М | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 5 | `RU_I = KC_B` → И | `RUSSIAN` 2 | 29 | `AS(B)` → и/И | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 6 | `RU_TE = KC_N` → Т | `RUSSIAN` 2 | 30 | `AS(N)` → т/Т | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 7 | `RU_SOFT = KC_M` → Ь | `RUSSIAN` 2 | 31 | `AS(M)` → ь/Ь | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 8 | `RU_BE = KC_COMM` → Б | `RUSSIAN` 2 | 32 | `AS(COMMA)` → б/Б | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 9 | `RU_YU = KC_DOT` → Ю | `RUSSIAN` 2 | 33 | `AS(DOT)` → ю/Ю | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 10 | `RU_YO = KC_GRV` → Ё | `RUSSIAN` 2 | 34 | `AS(GRAVE)` → ё/Ё | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 1 | row 3 col 11 | `RU_HARD = KC_RBRC` → Ъ | `RUSSIAN` 2 | 35 | `AS(RBKT)` → ъ/Ъ | implemented; CI pass | Russian–PC USB/BLE |
 
 ## Русские служебные позиции и thumbs
 
@@ -77,19 +78,21 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | target | shared thumb | Space/Navigation | `RUSSIAN` | 40 | `&lt NAVIGATION SPACE` | implemented; CI pass | tap/hold manual |
 | target | added outer thumb | unused | `RUSSIAN` | 41 | `&none` | implemented; CI pass | manual |
 
+Приоритет после исправления: `RUSSIAN = 2`; общие цели thumb `NUMBERS = 3`, `NAVIGATION = 4`, `FUNCTION = 5`, `SYSTEM_BT = 11`; языковые цели `RUSSIAN_SYMBOLS = 9`, `RUSSIAN_SMILES = 10`. Поэтому все пять используемых hold-переходов перекрывают русскую базу, а дочерний Smiles перекрывает Symbols.
+
 ## Русские Symbols и Smiles
 
 Пустые позиции QMK `KC_NO` остаются `&none`; таблица перечисляет переносимые непустые bindings. Символы отображаются хостом только при Russian–PC.
 
 | Source QMK file | Source QMK layer | Source physical position | Source behavior | Target ZMK layer | Target key-position | Target behavior | Status | Validation |
 |---|---:|---|---|---|---:|---|---|---|
-| `keymap.c` + `i18n.h` | 8 | row 1 col 3–4 | `RU_LPRN`, `RU_RPRN` | `RUSSIAN_SYMBOLS` 10 | 3, 4 | `LS(N9)`, `LS(N0)` → `(`, `)` | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 8 | row 1 right cols 0–5 | `RU_NUM/UNDS/MINS/SLSH/BSLS/MINS` | `RUSSIAN_SYMBOLS` 10 | 6–11 | `LS(N3)`, `LS(MINUS)`, `MINUS`, `LS(BSLH)`, `BSLH`, `MINUS` → `№ _ - / \\ -` | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 8 | row 2 right cols 1–5 | `RU_DOT/COMM/EXLM/QUES/SLSH` | `RUSSIAN_SYMBOLS` 10 | 19–23 | `FSLH`, `LS(FSLH)`, `LS(N1)`, `LS(N7)`, `LS(BSLH)` → `. , ! ? /` | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` + `i18n.h` | 8 | row 3 right cols 1–5 | `RU_DQUO/COLN/SCLN/EQL/ASTR` | `RUSSIAN_SYMBOLS` 10 | 31–35 | `LS(N2)`, `LS(N6)`, `LS(N4)`, `EQUAL`, `LS(N8)` → `" : ; = *` | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` | 8 | four Voyager thumbs | transparent + `LT(10, KC_SPACE)` | `RUSSIAN_SYMBOLS` 10 | 36–41 | transparent; position 40 = `&lt RUSSIAN_SMILES SPACE` | implemented; CI pass | fallback + tap/hold |
-| `keymap.c` | 10 | right home col 1 | `ST_MACRO_35` | `RUSSIAN_SMILES` 11 | 19 | named macro `LS(N6), LS(N0)` → `:)` | implemented; CI pass | Russian–PC USB/BLE |
-| `keymap.c` | 10 | right home col 2 | `ST_MACRO_36` | `RUSSIAN_SMILES` 11 | 20 | named macro `LS(N6), LS(N9)` → `:(` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 8 | row 1 col 3–4 | `RU_LPRN`, `RU_RPRN` | `RUSSIAN_SYMBOLS` 9 | 3, 4 | `LS(N9)`, `LS(N0)` → `(`, `)` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 8 | row 1 right cols 0–5 | `RU_NUM/UNDS/MINS/SLSH/BSLS/MINS` | `RUSSIAN_SYMBOLS` 9 | 6–11 | `LS(N3)`, `LS(MINUS)`, `MINUS`, `LS(BSLH)`, `BSLH`, `MINUS` → `№ _ - / \\ -` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 8 | row 2 right cols 1–5 | `RU_DOT/COMM/EXLM/QUES/SLSH` | `RUSSIAN_SYMBOLS` 9 | 19–23 | `FSLH`, `LS(FSLH)`, `LS(N1)`, `LS(N7)`, `LS(BSLH)` → `. , ! ? /` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` + `i18n.h` | 8 | row 3 right cols 1–5 | `RU_DQUO/COLN/SCLN/EQL/ASTR` | `RUSSIAN_SYMBOLS` 9 | 31–35 | `LS(N2)`, `LS(N6)`, `LS(N4)`, `EQUAL`, `LS(N8)` → `" : ; = *` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` | 8 | four Voyager thumbs | transparent + `LT(10, KC_SPACE)` | `RUSSIAN_SYMBOLS` 9 | 36–41 | transparent; position 40 = `&lt RUSSIAN_SMILES SPACE` | implemented; CI pass | fallback + tap/hold |
+| `keymap.c` | 10 | right home col 1 | `ST_MACRO_35` | `RUSSIAN_SMILES` 10 | 19 | named macro `LS(N6), LS(N0)` → `:)` | implemented; CI pass | Russian–PC USB/BLE |
+| `keymap.c` | 10 | right home col 2 | `ST_MACRO_36` | `RUSSIAN_SMILES` 10 | 20 | named macro `LS(N6), LS(N9)` → `:(` | implemented; CI pass | Russian–PC USB/BLE |
 
 ## Переключение языка и временный Caps Word
 

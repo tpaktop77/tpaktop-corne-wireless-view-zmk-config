@@ -1,6 +1,6 @@
 # Раскладка Corne
 
-Этот документ описывает целевую раскладку changes `complete-graphite-zmk-migration` и `migrate-russian-layers`. `·` означает `&none`, `▽` — `&trans`. `AS(X)` означает Auto Shift: tap выводит `X`, удержание более 250 мс — `Shift+X`.
+Этот документ описывает целевую раскладку changes `complete-graphite-zmk-migration`, `migrate-russian-layers` и исправления `fix-russian-thumb-layer-priority`. `·` означает `&none`, `▽` — `&trans`. `AS(X)` означает Auto Shift: tap выводит `X`, удержание более 300 мс — `Shift+X`.
 
 ## Нумерация позиций
 
@@ -21,21 +21,23 @@ ZMK combo используют физические `key-positions`, после�
 |---:|---|---|---|
 | 0 | `GRAPHITE` | Graphite | Единственный загрузочный base |
 | 1 | `QWERTY` | QWERTY | Минимальная альтернативная раскладка |
-| 2 | `NUMBERS` | Numbers | Цифры, скобки и арифметика |
-| 3 | `NAVIGATION` | Navigation | Навигация и media; OS adaptation deferred |
-| 4 | `FUNCTION` | Function | F1–F20 и modifiers |
-| 5 | `VIM` | Vim | Vim macros |
-| 6 | `SYMBOLS` | Symbols | Английские символы и path macros |
-| 7 | `SMILES` | Smiles | Английские смайлики |
-| 8 | `SYSTEM_BT` | System | Bluetooth и OS profile |
-| 9 | `RUSSIAN` | Russian | Русская раскладка Russian–PC |
-| 10 | `RUSSIAN_SYMBOLS` | Russian Symbols | Русские символы |
-| 11 | `RUSSIAN_SMILES` | Russian Smiles | Русские смайлы |
+| 2 | `RUSSIAN` | Russian | Русская раскладка Russian–PC |
+| 3 | `NUMBERS` | Numbers | Цифры, скобки и арифметика |
+| 4 | `NAVIGATION` | Navigation | Навигация и media; OS adaptation deferred |
+| 5 | `FUNCTION` | Function | F1–F20 и modifiers |
+| 6 | `VIM` | Vim | Vim macros |
+| 7 | `SYMBOLS` | Symbols | Английские символы и path macros |
+| 8 | `SMILES` | Smiles | Английские смайлики |
+| 9 | `RUSSIAN_SYMBOLS` | Russian Symbols | Русские символы |
+| 10 | `RUSSIAN_SMILES` | Russian Smiles | Русские смайлы |
+| 11 | `SYSTEM_BT` | System | Bluetooth и OS profile |
 | 12 | `STUDIO_EXTRA_1` | reserved | Резерв ZMK Studio |
 | 13 | `STUDIO_EXTRA_2` | reserved | Резерв ZMK Studio |
 | 14 | `STUDIO_EXTRA_3` | reserved | Резерв ZMK Studio |
 
-## Общие thumb-клавиши Graphite и QWERTY
+В ZMK binding выбирается из активного слоя с наибольшим индексом. Поэтому все три base-слоя расположены первыми, общие thumb-overlay — выше них, а каждый дочерний слой (`VIM`, `SMILES`, `RUSSIAN_SMILES`) — выше своего родителя. Это делает одинаковый thumb-кластер фактически одинаковым на Graphite, QWERTY и Russian.
+
+## Общие thumb-клавиши базовых слоёв
 
 ```text
 Left outer       Left inner          Left center
@@ -52,7 +54,9 @@ TAB / FUNCTION   SPACE / NAVIGATION  ·
 &lt FUNCTION TAB | &lt NAVIGATION SPACE | &none
 ```
 
-`&lt.quick-tap-ms = 250` сохраняет быстрое повторение tap-кода layer-tap и не относится к Auto Shift.
+`&lt.quick-tap-ms = 250` сохраняет быстрое повторение tap-кода layer-tap и не относится к Auto Shift. Порог самого Auto Shift увеличен отдельно до 300 мс, чтобы уменьшить ложные заглавные буквы при обычном наборе.
+
+На `RUSSIAN` единственное языковое отличие — позиция 37 открывает `RUSSIAN_SYMBOLS` вместо `SYMBOLS`; позиции 36 и 38–41 имеют ту же семантику. Все целевые overlay-слои имеют больший индекс, чем `RUSSIAN`, поэтому удержание действительно перекрывает русскую базу.
 
 ## 0 — Graphite
 
@@ -80,87 +84,7 @@ Body содержит только английские буквы, пустые
               SYSTEM  BSP/SYMB  DEL/NUM | TAB/FN  SPC/NAV  ·
 ```
 
-## 2 — Numbers
-
-Сохранённый Oryx Numbers. `ESC/VIM` использует именованную ссылку `VIM`.
-
-```text
-ENTER <    >    (    )    · | =    7    8    9    ·    -
-TAB   LALT LGUI LSFT LCTL · | ·    4    5    6    .    /
-·     {    }    [    ]    · | .    1    2    3    =    *
-              ▽    ▽    ▽   | ESC/VIM 0 ▽
-```
-
-Arithmetic combo активны только здесь.
-
-## 3 — Navigation
-
-Слой перенесён без OS-aware адаптации: `migrated, OS adaptation deferred`.
-
-```text
-ENTER PREV NEXT STOP PLAY VOICE | PGUP HOME UP   END  · CTRL-W
-TAB   LALT LGUI LSFT LCTL MUTE  | PGDN LEFT DOWN RIGHT · CTRL-T
-·     VOLD VOLU ·    ·    ·     | ·    P-TAB N-TAB P-DESK N-DESK INS
-                  ▽  ▽  ▽        | ▽  ▽  ▽
-```
-
-## 4 — Function
-
-```text
-ENTER F1   F2   F3   F4   F5 | F6   F7   F8   F9   F10  ·
-TAB   LALT LGUI LSFT LCTL ·  | ·    RCTL RSFT RGUI RALT ·
-·     F11  F12  F13  F14  F15| F16  F17  F18  F19  F20  ·
-                 ▽  ▽ DEL/VIM | ▽  ▽  ▽
-```
-
-## 5 — Vim
-
-`M11–M21` — существующие version-controlled macros с комментариями в keymap.
-
-```text
-:  ·  M11 M12 M13 M14 | M18 M19 K M20 · ·
-·  ·  ·   M15 M16 M17 | M21 H   J L   · ·
-·  ·  ·   ·   ·   ·   | ·   ·   · ·   · ·
-              ▽  ▽  ▽  | ▽  ▽  ▽
-```
-
-## 6 — Symbols
-
-```text
-`   <   >   (   )   · | #  _  -  /  \\ -
-M22 M23 M24 M25 /   | | @  .  ,  !  ?  /
-M26 {   }   [   ]   · | '  "  :  ;  =  *
-              ▽  ▽  ▽ | ▽  SPACE/SMILES  ▽
-```
-
-## 7 — Smiles
-
-`M27–M34` — только английские ASCII-смайлики.
-
-```text
-· · · · · · | M27 M28 M29 M30 · ·
-· · · · · · | M31 M32 M33 M34 · ·
-· · · · · · | ·   ·   ·   ·   · ·
-        ▽ ▽ ▽ | ▽ ▽ ▽
-```
-
-## 8 — System
-
-Слой активен только при удержании левого внешнего thumb (`position 36`). Левая рука управляет Bluetooth, правая — независимым OS profile.
-
-```text
-BT0  BT1  BT2  BT3  BT4  · | ·       ·       ·      ·      · ·
-·    ·    ·    ·    ·    · | ·       WINDOWS MACOS  LINUX  · ·
-BTCLR·    ·    ·    ·    · | ·       ·      ·      · · ·
-                 ▽  ▽  ▽    | ▽  ▽  ▽
-```
-
-- BT0–BT4: `&bt BT_SEL 0..4`.
-- BT Clear: нижний внешний левый угол, position 24. Короткий tap ничего не делает; непрерывное удержание 1500 мс выполняет `&bt BT_CLR`.
-- OS selectors: positions 19–21: Windows, macOS, Linux; position 18 остаётся пустой, поэтому Windows находится под указательным пальцем на home middle row.
-- Выбор ОС не меняет слой и не выбирает Bluetooth profile.
-
-## 9 — Russian
+## 2 — Russian
 
 Слой использует стандартные HID usages и требует активной раскладки Russian–PC на хосте. Он не использует Unicode. Position 0 прозрачен и наследует Graphite Escape; position 12 прозрачен и наследует Graphite `&none`.
 
@@ -178,9 +102,75 @@ Thumb positions `36..41`:
 &lt FUNCTION TAB | &lt NAVIGATION SPACE | &none
 ```
 
+Все hold-слои имеют больший индекс, чем `RUSSIAN`, поэтому System, Russian Symbols, Numbers, Function и Navigation перекрывают русскую базу до отпускания thumb.
+
 `→ENG` на position 24 отправляет `Ctrl+Shift+1` и затем прямо активирует `GRAPHITE`. То же действие доступно combo positions `7+8+9` (Russian `Г+Ш+Щ`). QWERTY в языковой цикл не входит.
 
-## 10 — Russian Symbols
+## 3 — Numbers
+
+Сохранённый Oryx Numbers. `ESC/VIM` использует именованную ссылку `VIM`.
+
+```text
+ENTER <    >    (    )    · | =    7    8    9    ·    -
+TAB   LALT LGUI LSFT LCTL · | ·    4    5    6    .    /
+·     {    }    [    ]    · | .    1    2    3    =    *
+              ▽    ▽    ▽   | ESC/VIM 0 ▽
+```
+
+Arithmetic combo активны только здесь.
+
+## 4 — Navigation
+
+Слой перенесён без OS-aware адаптации: `migrated, OS adaptation deferred`.
+
+```text
+ENTER PREV NEXT STOP PLAY VOICE | PGUP HOME UP   END  · CTRL-W
+TAB   LALT LGUI LSFT LCTL MUTE  | PGDN LEFT DOWN RIGHT · CTRL-T
+·     VOLD VOLU ·    ·    ·     | ·    P-TAB N-TAB P-DESK N-DESK INS
+                  ▽  ▽  ▽        | ▽  ▽  ▽
+```
+
+## 5 — Function
+
+```text
+ENTER F1   F2   F3   F4   F5 | F6   F7   F8   F9   F10  ·
+TAB   LALT LGUI LSFT LCTL ·  | ·    RCTL RSFT RGUI RALT ·
+·     F11  F12  F13  F14  F15| F16  F17  F18  F19  F20  ·
+                 ▽  ▽ DEL/VIM | ▽  ▽  ▽
+```
+
+## 6 — Vim
+
+`M11–M21` — существующие version-controlled macros с комментариями в keymap.
+
+```text
+:  ·  M11 M12 M13 M14 | M18 M19 K M20 · ·
+·  ·  ·   M15 M16 M17 | M21 H   J L   · ·
+·  ·  ·   ·   ·   ·   | ·   ·   · ·   · ·
+              ▽  ▽  ▽  | ▽  ▽  ▽
+```
+
+## 7 — Symbols
+
+```text
+`   <   >   (   )   · | #  _  -  /  \\ -
+M22 M23 M24 M25 /   | | @  .  ,  !  ?  /
+M26 {   }   [   ]   · | '  "  :  ;  =  *
+              ▽  ▽  ▽ | ▽  SPACE/SMILES  ▽
+```
+
+## 8 — Smiles
+
+`M27–M34` — только английские ASCII-смайлики.
+
+```text
+· · · · · · | M27 M28 M29 M30 · ·
+· · · · · · | M31 M32 M33 M34 · ·
+· · · · · · | ·   ·   ·   ·   · ·
+        ▽ ▽ ▽ | ▽ ▽ ▽
+```
+
+## 9 — Russian Symbols
 
 Перенесены только три нижних ряда Voyager. Обозначения ниже — ожидаемые символы Russian–PC; в keymap сохранены исходные физические HID usages QMK.
 
@@ -193,7 +183,7 @@ Thumb positions `36..41`:
 
 Удержание position 40 открывает `RUSSIAN_SMILES`, tap печатает Space. Остальные прозрачные thumbs сначала наследуются из `RUSSIAN`, затем при необходимости из `GRAPHITE`. `%`, `₽`, `+` из пропущенного верхнего ряда Voyager пока никуда не переносились.
 
-## 11 — Russian Smiles
+## 10 — Russian Smiles
 
 ```text
 · · · · · · | · ·  ·  · · ·
@@ -205,6 +195,22 @@ Thumb positions `36..41`:
 - Position 19: исходный `ST_MACRO_35`, `Shift+6` затем `Shift+0` → `:)` при Russian–PC.
 - Position 20: исходный `ST_MACRO_36`, `Shift+6` затем `Shift+9` → `:(` при Russian–PC.
 - Combo positions `5+17` (`П+Е`) удерживает этот слой с `slow-release`; английский Smiles combo на тех же позициях имеет отдельный scope.
+
+## 11 — System
+
+Слой активен только при удержании левого внешнего thumb (`position 36`) с любого базового слоя, включая Russian. Левая рука управляет Bluetooth, правая — независимым OS profile.
+
+```text
+BT0  BT1  BT2  BT3  BT4  · | ·       ·       ·      ·      · ·
+·    ·    ·    ·    ·    · | ·       WINDOWS MACOS  LINUX  · ·
+BTCLR·    ·    ·    ·    · | ·       ·      ·      · · ·
+                 ▽  ▽  ▽    | ▽  ▽  ▽
+```
+
+- BT0–BT4: `&bt BT_SEL 0..4`.
+- BT Clear: нижний внешний левый угол, position 24. Короткий tap ничего не делает; непрерывное удержание 1500 мс выполняет `&bt BT_CLR`.
+- OS selectors: positions 19–21: Windows, macOS, Linux; position 18 остаётся пустой, поэтому Windows находится под указательным пальцем на home middle row.
+- Выбор ОС не меняет слой и не выбирает Bluetooth profile.
 
 ## Настройка и синхронизация языка хоста
 
