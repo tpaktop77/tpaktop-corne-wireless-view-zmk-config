@@ -12,21 +12,21 @@
 
 #define GRAPHITE 0
 #define QWERTY 1
-#define NUMBERS 2
-#define NAVIGATION 3
-#define FUNCTION 4
-#define VIM 5
-#define SYMBOLS 6
-#define SMILES 7
-#define SYSTEM_BT 8
-#define RUSSIAN 9
-#define RUSSIAN_SYMBOLS 10
-#define RUSSIAN_SMILES 11
+#define RUSSIAN 2
+#define NUMBERS 3
+#define NAVIGATION 4
+#define FUNCTION 5
+#define VIM 6
+#define SYMBOLS 7
+#define SMILES 8
+#define RUSSIAN_SYMBOLS 9
+#define RUSSIAN_SMILES 10
+#define SYSTEM_BT 11
 #define STUDIO_EXTRA_1 12
 #define STUDIO_EXTRA_2 13
 #define STUDIO_EXTRA_3 14
 
-// Tap a letter normally; hold it for 250 ms to send Left Shift + letter.
+// Tap a letter normally; hold it for 300 ms to send Left Shift + letter.
 #define AS(keycode) &as LS(keycode) keycode
 
 // Match QMK quick-tap repeat behavior for layer-tap keys.
@@ -45,7 +45,7 @@
                 as: auto_shift {
                         compatible = "zmk,behavior-hold-tap";
                         #binding-cells = <2>;
-                        tapping-term-ms = <250>;
+                        tapping-term-ms = <300>;
                         quick-tap-ms = <0>;
                         flavor = "tap-preferred";
                         bindings = <&kp>, <&kp>;
@@ -651,6 +651,22 @@
                         >;
                 };
 
+                russian_layer {
+// -------------------------------------------------------------------------------------------------
+// |  ESC* |  Й  |  Ц  |  У  |  К  |  Е  |   |  Н  |  Г  |  Ш  |  Щ  |  З  |  Х  |
+// |       |  Ф  |  Ы  |  В  |  А  |  П  |   |  Р  |  О  |  Л  |  Д  |  Ж  |  Э  |
+// |  ENG  |  Я  |  Ч  |  С  |  М  |  И  |   |  Т  |  Ь  |  Б  |  Ю  |  Ё  |  Ъ  |
+//               | SYSTEM | BSP/RU-SYM | DEL/NUM |   | TAB/FN | SPC/NAV |       |
+// * position 0 is transparent and inherits Escape from Graphite.
+                        display-name = "Russian";
+                        bindings = <
+   &trans AS(Q) AS(W) AS(E) AS(R) AS(T)   AS(Y) AS(U) AS(I) AS(O) AS(P) AS(LBKT)
+   &trans AS(A) AS(S) AS(D) AS(F) AS(G)   AS(H) AS(J) AS(K) AS(L) AS(SEMI) AS(SQT)
+   &to_english AS(Z) AS(X) AS(C) AS(V) AS(B)   AS(N) AS(M) AS(COMMA) AS(DOT) AS(GRAVE) AS(RBKT)
+                  &mo SYSTEM_BT &lt RUSSIAN_SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
+                        >;
+                };
+
                 numbers_layer {
 // -----------------------------------------------------------------------------------------
 // | ENT |  <  |  >  |  (  |  )  |     |   |  =  |  7  |  8  |  9  |     |  -  |
@@ -741,37 +757,6 @@
                         >;
                 };
 
-                system_layer {
-// -------------------------------------------------------------------------------------------------
-// | BT0 | BT1 | BT2 | BT3 | BT4 |     |   |         |       |       |     |     |     |
-// |     |     |     |     |     |     |   |         | WINDOWS | MACOS | LINUX |     |     |
-// | CLEAR(hold 1500 ms)    |     |     |   |         |       |       |     |     |     |
-//                           |     |     |   |         |       |       |
-                        display-name = "System";
-                        bindings = <
-   &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none   &none &none &none &none &none &none
-   &none &none &none &none &none &none                                          &none &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none
-   &bt_clear_hold 0 0 &none &none &none &none &none                             &none &none &none &none &none &none
-                  &trans &trans &trans   &trans &trans &trans
-                        >;
-                };
-
-                russian_layer {
-// -------------------------------------------------------------------------------------------------
-// |  ESC* |  Й  |  Ц  |  У  |  К  |  Е  |   |  Н  |  Г  |  Ш  |  Щ  |  З  |  Х  |
-// |       |  Ф  |  Ы  |  В  |  А  |  П  |   |  Р  |  О  |  Л  |  Д  |  Ж  |  Э  |
-// |  ENG  |  Я  |  Ч  |  С  |  М  |  И  |   |  Т  |  Ь  |  Б  |  Ю  |  Ё  |  Ъ  |
-//               | SYSTEM | BSP/RU-SYM | DEL/NUM |   | TAB/FN | SPC/NAV |       |
-// * position 0 is transparent and inherits Escape from Graphite.
-                        display-name = "Russian";
-                        bindings = <
-   &trans AS(Q) AS(W) AS(E) AS(R) AS(T)   AS(Y) AS(U) AS(I) AS(O) AS(P) AS(LBKT)
-   &trans AS(A) AS(S) AS(D) AS(F) AS(G)   AS(H) AS(J) AS(K) AS(L) AS(SEMI) AS(SQT)
-   &to_english AS(Z) AS(X) AS(C) AS(V) AS(B)   AS(N) AS(M) AS(COMMA) AS(DOT) AS(GRAVE) AS(RBKT)
-                  &mo SYSTEM_BT &lt RUSSIAN_SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
-                        >;
-                };
-
                 russian_symbols_layer {
 // -------------------------------------------------------------------------------------------------
 // |     |     |     |  (  |  )  |     |   |  №  |  _  |  -  |  /  |  \\  |  -  |
@@ -799,6 +784,21 @@
    &none &none &none &none &none &none   &none &none &none &none &none &none
    &none &none &none &none &none &none   &none &russian_smile_happy &russian_smile_sad &none &none &none
    &none &none &none &none &none &none   &none &none &none &none &none &none
+                  &trans &trans &trans   &trans &trans &trans
+                        >;
+                };
+
+                system_layer {
+// -------------------------------------------------------------------------------------------------
+// | BT0 | BT1 | BT2 | BT3 | BT4 |     |   |         |       |       |     |     |     |
+// |     |     |     |     |     |     |   |         | WINDOWS | MACOS | LINUX |     |     |
+// | CLEAR(hold 1500 ms)    |     |     |   |         |       |       |     |     |     |
+//                           |     |     |   |         |       |       |
+                        display-name = "System";
+                        bindings = <
+   &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none   &none &none &none &none &none &none
+   &none &none &none &none &none &none                                          &none &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none
+   &bt_clear_hold 0 0 &none &none &none &none &none                             &none &none &none &none &none &none
                   &trans &trans &trans   &trans &trans &trans
                         >;
                 };

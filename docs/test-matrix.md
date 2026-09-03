@@ -12,19 +12,22 @@
 | OpenSpec planning | `openspec status --change complete-graphite-zmk-migration` | 4/4 artifacts complete | pass | proposal/design/6 specs/tasks созданы |
 | Russian OpenSpec planning | `openspec status --change migrate-russian-layers` | 4/4 artifacts complete | pass | proposal/design/4 specs/tasks созданы |
 | OpenSpec strict | `openspec validate migrate-russian-layers --strict` | valid, 0 issues | pass | `Change 'migrate-russian-layers' is valid` |
+| Thumb priority OpenSpec planning | `openspec status --change fix-russian-thumb-layer-priority` | 4/4 artifacts complete | pass | proposal/design/spec/tasks созданы в отдельном follow-up change |
+| Thumb priority OpenSpec strict | `openspec validate fix-russian-thumb-layer-priority --strict` | valid, 0 issues | pass | `Change 'fix-russian-thumb-layer-priority' is valid` |
 | Whitespace | `git diff --check` | no output, exit 0 | pass | exit 0, no output |
 | Layer sizes | structural script | 42 bindings на каждый активный слой | pass | Graphite–Russian Smiles: 12 × 42 |
 | Named layer refs | `rg` audit | нет необъяснимых layer numbers | pass | layer behaviors/scopes используют константы |
+| Layer priority | structural audit | `GRAPHITE 0`, `QWERTY 1`, `RUSSIAN 2`; все thumb overlays выше base; node order совпадает с defines | pass | defines/nodes совпали; все topological invariants pass |
 | Exclusions | `rg` audit | нет layer2/mouse/OS-layer/language persistence/custom Russian Caps Word | pass | implementation-only search; no new matches |
 
 ## Build matrix
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310443](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310443), West Build/Kconfig/Devicetree/artifact pass |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310482](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310482), West Build/Kconfig/Devicetree/artifact pass |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | Thumb/Auto Shift fix commit `dc0d314`; [job 100755821232](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468/job/100755821232), West Build/Kconfig/Devicetree/artifact pass |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | Thumb/Auto Shift fix commit `dc0d314`; [job 100755821337](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468/job/100755821337), West Build/Kconfig/Devicetree/artifact pass |
 
-Run `33734651351` относится к change `migrate-russian-layers`; обе UF2 включены в объединённый firmware artifact.
+PR run [`33787520468`](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468) относится к change `fix-russian-thumb-layer-priority`; обе UF2 включены в объединённый firmware artifact.
 
 ## Layout и переключение
 
@@ -86,19 +89,34 @@ Precondition для каждого Windows/macOS/Linux хоста: `Ctrl+Shift+1
 | 40 | Space | Navigation | tap Space; hold Navigation | manual pending |
 | 41 | none | none | ничего не происходит | manual pending |
 
+### Регрессия thumb-кластера на Russian
+
+PR #5 собирался успешно, но аппаратно `RUSSIAN = 9` маскировал более низкий `NAVIGATION = 3`. После исправления повторить каждую строку отдельно по USB и BLE; проверки на Graphite и QWERTY служат контролем, что их прежнее поведение сохранилось.
+
+| Position | Hold target | Проверка на Russian | До исправления | USB после исправления | BLE после исправления |
+|---:|---|---|---|---|---|
+| 36 | System | видны BT0–BT4 и OS selectors; release возвращает Russian | не проверено | manual pending | manual pending |
+| 37 | Russian Symbols | видны русские символы; tap остаётся Backspace | работало | manual pending | manual pending |
+| 38 | Numbers | видны цифры; tap остаётся Delete | не проверено | manual pending | manual pending |
+| 39 | Function | видны F-клавиши; tap остаётся Tab | не проверено | manual pending | manual pending |
+| 40 | Navigation | стрелки/навигация перекрывают русские буквы; tap остаётся Space | fail: оставался Russian | manual pending | manual pending |
+| 41 | none | ничего не происходит | не проверено | manual pending | manual pending |
+
+Дополнительно на `RUSSIAN_SYMBOLS` удержание position 40 SHALL открывать `RUSSIAN_SMILES` и возвращать Symbols после release; проверить по USB и BLE (`manual pending`).
+
 ## Auto Shift
 
 | Проверка | Layout | Transport | Ожидаемый результат | Статус |
 |---|---|---|---|---|
-| tap <250 ms каждой буквы | Graphite | USB/BLE | lowercase/plain keycode | manual pending |
-| hold >250 ms каждой буквы | Graphite | USB/BLE | Shift + та же буква | manual pending |
-| tap <250 ms каждой буквы | QWERTY | USB/BLE | lowercase/plain keycode | manual pending |
-| hold >250 ms каждой буквы | QWERTY | USB/BLE | Shift + та же буква | manual pending |
-| быстрый обычный набор | оба | USB/BLE | нет ложных заглавных букв | manual pending |
+| tap <300 ms каждой буквы | Graphite | USB/BLE | lowercase/plain keycode | manual pending |
+| hold >300 ms каждой буквы | Graphite | USB/BLE | Shift + та же буква | manual pending |
+| tap <300 ms каждой буквы | QWERTY | USB/BLE | lowercase/plain keycode | manual pending |
+| hold >300 ms каждой буквы | QWERTY | USB/BLE | Shift + та же буква | manual pending |
+| быстрый обычный набор | Graphite/QWERTY/Russian | USB/BLE | ложные заглавные буквы, наблюдавшиеся при 250 мс, больше не возникают | manual pending |
 | digits/NumLock/thumbs/function/symbols | все | USB/BLE | Auto Shift не применяется | manual pending |
-| quick-tap Backspace | оба | USB/BLE | auto-repeat удаления как до Auto Shift | manual pending |
-| tap <250 ms каждой из 33 букв | Russian | USB/BLE | строчная Russian–PC буква | manual pending |
-| hold >250 ms каждой из 33 букв | Russian | USB/BLE | Shift + тот же usage формирует заглавную букву | manual pending |
+| quick-tap Backspace | Graphite/QWERTY/Russian | USB/BLE | `&lt.quick-tap-ms = 250` и auto-repeat удаления не изменились | manual pending |
+| tap <300 ms каждой из 33 букв | Russian | USB/BLE | строчная Russian–PC буква | manual pending |
+| hold >300 ms каждой из 33 букв | Russian | USB/BLE | Shift + тот же usage формирует заглавную букву | manual pending |
 | Russian symbols/smiles/thumbs/language actions | Russian | USB/BLE | Auto Shift не применяется | manual pending |
 
 ## Combo — обычные и layer actions
