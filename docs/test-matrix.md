@@ -11,20 +11,20 @@
 |---|---|---|---|---|
 | OpenSpec planning | `openspec status --change complete-graphite-zmk-migration` | 4/4 artifacts complete | pass | proposal/design/6 specs/tasks созданы |
 | Russian OpenSpec planning | `openspec status --change migrate-russian-layers` | 4/4 artifacts complete | pass | proposal/design/4 specs/tasks созданы |
-| OpenSpec strict | `openspec validate ... --strict` | valid, 0 issues | pass | post-implementation: 1 change passed, 0 failed |
+| OpenSpec strict | `openspec validate migrate-russian-layers --strict` | valid, 0 issues | pass | `Change 'migrate-russian-layers' is valid` |
 | Whitespace | `git diff --check` | no output, exit 0 | pass | exit 0, no output |
-| Layer sizes | structural script | 42 bindings на каждый активный слой | pending | Graphite–Russian Smiles: 12 × 42 после реализации |
+| Layer sizes | structural script | 42 bindings на каждый активный слой | pass | Graphite–Russian Smiles: 12 × 42 |
 | Named layer refs | `rg` audit | нет необъяснимых layer numbers | pass | layer behaviors/scopes используют константы |
-| Exclusions | `rg` audit | нет layer2/mouse/OS-layer/language persistence/custom Russian Caps Word | pending | implementation-only search |
+| Exclusions | `rg` audit | нет layer2/mouse/OS-layer/language persistence/custom Russian Caps Word | pass | implementation-only search; no new matches |
 
 ## Build matrix
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | follow-up [job 99814284683](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33494759869/job/99814284683) |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | follow-up [job 99814284610](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33494759869/job/99814284610) |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310443](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310443), West Build/Kconfig/Devicetree/artifact pass |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310482](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310482), West Build/Kconfig/Devicetree/artifact pass |
 
-Предыдущие evidence относятся к английскому baseline. Для change `migrate-russian-layers` обе строки должны получить новый успешный run/локальный build до merge.
+Run `33734651351` относится к change `migrate-russian-layers`; обе UF2 включены в объединённый firmware artifact.
 
 ## Layout и переключение
 
