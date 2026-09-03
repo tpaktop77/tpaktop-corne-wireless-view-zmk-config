@@ -11,6 +11,7 @@ OS profile — независимое внутреннее состояние cu
 - Нет отдельных Graphite/QWERTY вариантов для ОС.
 - Нет связи OS profile с BT0–BT4 или текущим USB/BLE endpoint.
 - Переключение Graphite/QWERTY не меняет OS profile.
+- Переключение Graphite/Russian и языка хоста не меняет OS profile.
 
 ## Behavior API
 
@@ -63,10 +64,30 @@ OS profile — независимое внутреннее состояние cu
 
 Это три соседние клавиши правого home row; position `18` остаётся пустой, а Windows на position `19` находится под указательным пальцем. Behavior работает на central half и не меняет active keymap layer.
 
+## Независимое переключение языка
+
+OS profile, Bluetooth profile и язык — три независимых механизма:
+
+- `&os_set` меняет только внутренний Windows/macOS/Linux profile;
+- `&bt BT_SEL` меняет только Bluetooth profile;
+- `to_russian`/`to_english` отправляют shortcut языка хосту и меняют только base layer `RUSSIAN`/`GRAPHITE`.
+
+Language macro не выбирает OS profile и не зависит от него. На каждом Windows/macOS/Linux хосте пользователь должен настроить `Ctrl+Shift+1` как прямой выбор English и `Ctrl+Shift+2` как прямой выбор Russian–PC. На macOS это может быть реализовано через Hammerspoon, как в QMK/Oryx source; на Windows и Linux — через доступные системные настройки или утилиты прямого выбора раскладки.
+
+| Хост | Требуемая подготовка | Проверка до теста keymap |
+|---|---|---|
+| Windows | сохранить текущую настройку/утилиту, где `Ctrl+Shift+1` выбирает English, а `Ctrl+Shift+2` Russian–PC | нажать оба shortcut с обычной клавиатуры и проверить прямой, не циклический выбор |
+| macOS | сохранить Hammerspoon bindings из рабочего Voyager setup для U.S. и Russian–PC | проверить прямой выбор обоих input source |
+| Linux | назначить два прямых shortcut средствами desktop/WM или вспомогательной утилиты | проверить, что shortcuts выбирают конкретную раскладку, а не следующую по кругу |
+
+Прошивка не определяет активный язык хоста, не сохраняет его во flash и не связывает его с BT0–BT4. После reboot прошивка начинает с Graphite и Windows OS profile, но фактический язык хоста может отличаться до первого направленного `to_russian` или `to_english`.
+
 ## Ограничения текущего этапа
 
 - Профиль не переживает reboot.
 - Профиль не определяется хостом автоматически.
 - Профиль не выбирается вместе с Bluetooth profile.
+- Язык и русский слой не выбираются вместе с OS или Bluetooth profile.
+- Автоматической синхронизации после внешней смены языка хоста нет.
 - Navigation layer пока не использует `&os_action`: `migrated, OS adaptation deferred`.
 - Только перечисленные combo используют OS-aware API.

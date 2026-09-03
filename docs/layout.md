@@ -1,6 +1,6 @@
 # Раскладка Corne
 
-Этот документ описывает целевую раскладку change `complete-graphite-zmk-migration`. `·` означает `&none`, `▽` — `&trans`. `AS(X)` означает Auto Shift: tap выводит `X`, удержание более 250 мс — `Shift+X`.
+Этот документ описывает целевую раскладку changes `complete-graphite-zmk-migration` и `migrate-russian-layers`. `·` означает `&none`, `▽` — `&trans`. `AS(X)` означает Auto Shift: tap выводит `X`, удержание более 250 мс — `Shift+X`.
 
 ## Нумерация позиций
 
@@ -28,9 +28,12 @@ ZMK combo используют физические `key-positions`, после�
 | 6 | `SYMBOLS` | Symbols | Английские символы и path macros |
 | 7 | `SMILES` | Smiles | Английские смайлики |
 | 8 | `SYSTEM_BT` | System | Bluetooth и OS profile |
-| 9 | `STUDIO_EXTRA_1` | reserved | Резерв ZMK Studio |
-| 10 | `STUDIO_EXTRA_2` | reserved | Резерв ZMK Studio |
-| 11 | `STUDIO_EXTRA_3` | reserved | Резерв ZMK Studio |
+| 9 | `RUSSIAN` | Russian | Русская раскладка Russian–PC |
+| 10 | `RUSSIAN_SYMBOLS` | Russian Symbols | Русские символы |
+| 11 | `RUSSIAN_SMILES` | Russian Smiles | Русские смайлы |
+| 12 | `STUDIO_EXTRA_1` | reserved | Резерв ZMK Studio |
+| 13 | `STUDIO_EXTRA_2` | reserved | Резерв ZMK Studio |
+| 14 | `STUDIO_EXTRA_3` | reserved | Резерв ZMK Studio |
 
 ## Общие thumb-клавиши Graphite и QWERTY
 
@@ -58,11 +61,13 @@ TAB / FUNCTION   SPACE / NAVIGATION  ·
 ```text
 ESC     AS(B) AS(L) AS(D) AS(W) AS(Z) | NUMLOCK AS(F) AS(O) AS(U) AS(J) ·
 ·       AS(N) AS(R) AS(T) AS(S) AS(G) | AS(Y)   AS(H) AS(A) AS(E) AS(I) ·
-·       AS(Q) AS(X) AS(M) AS(C) AS(V) | AS(K)   AS(P) ·     ·     ·     →QWERTY
+→RU     AS(Q) AS(X) AS(M) AS(C) AS(V) | AS(K)   AS(P) ·     ·     ·     →QWERTY
               SYSTEM  BSP/SYMB  DEL/NUM | TAB/FN  SPC/NAV  ·
 ```
 
 После reboot активен именно этот слой.
+
+`→RU` на position 24 отправляет `Ctrl+Shift+2` и затем прямо активирует `RUSSIAN`. То же действие доступно combo positions `7+8+9` (Graphite `F+O+U`).
 
 ## 1 — QWERTY
 
@@ -154,3 +159,64 @@ BTCLR·    ·    ·    ·    · | ·       ·      ·      · · ·
 - BT Clear: нижний внешний левый угол, position 24. Короткий tap ничего не делает; непрерывное удержание 1500 мс выполняет `&bt BT_CLR`.
 - OS selectors: positions 19–21: Windows, macOS, Linux; position 18 остаётся пустой, поэтому Windows находится под указательным пальцем на home middle row.
 - Выбор ОС не меняет слой и не выбирает Bluetooth profile.
+
+## 9 — Russian
+
+Слой использует стандартные HID usages и требует активной раскладки Russian–PC на хосте. Он не использует Unicode. Position 0 прозрачен и наследует Graphite Escape; position 12 прозрачен и наследует Graphite `&none`.
+
+```text
+▽       AS(Й) AS(Ц) AS(У) AS(К) AS(Е) | AS(Н) AS(Г) AS(Ш) AS(Щ) AS(З) AS(Х)
+▽       AS(Ф) AS(Ы) AS(В) AS(А) AS(П) | AS(Р) AS(О) AS(Л) AS(Д) AS(Ж) AS(Э)
+→ENG    AS(Я) AS(Ч) AS(С) AS(М) AS(И) | AS(Т) AS(Ь) AS(Б) AS(Ю) AS(Ё) AS(Ъ)
+              SYSTEM BSP/RU-SYMB DEL/NUM | TAB/FN SPC/NAV ·
+```
+
+Thumb positions `36..41`:
+
+```text
+&mo SYSTEM_BT | &lt RUSSIAN_SYMBOLS BSPC | &lt NUMBERS DEL
+&lt FUNCTION TAB | &lt NAVIGATION SPACE | &none
+```
+
+`→ENG` на position 24 отправляет `Ctrl+Shift+1` и затем прямо активирует `GRAPHITE`. То же действие доступно combo positions `7+8+9` (Russian `Г+Ш+Щ`). QWERTY в языковой цикл не входит.
+
+## 10 — Russian Symbols
+
+Перенесены только три нижних ряда Voyager. Обозначения ниже — ожидаемые символы Russian–PC; в keymap сохранены исходные физические HID usages QMK.
+
+```text
+· · · ( ) · | № _ - / \\ -
+· · · · · · | · . , ! ? /
+· · · · · · | · " : ; = *
+        ▽ ▽ ▽ | ▽ SPACE/RU-SMILES ▽
+```
+
+Удержание position 40 открывает `RUSSIAN_SMILES`, tap печатает Space. Остальные прозрачные thumbs сначала наследуются из `RUSSIAN`, затем при необходимости из `GRAPHITE`. `%`, `₽`, `+` из пропущенного верхнего ряда Voyager пока никуда не переносились.
+
+## 11 — Russian Smiles
+
+```text
+· · · · · · | · ·  ·  · · ·
+· · · · · · | · :) :( · · ·
+· · · · · · | · ·  ·  · · ·
+        ▽ ▽ ▽ | ▽ ▽ ▽
+```
+
+- Position 19: исходный `ST_MACRO_35`, `Shift+6` затем `Shift+0` → `:)` при Russian–PC.
+- Position 20: исходный `ST_MACRO_36`, `Shift+6` затем `Shift+9` → `:(` при Russian–PC.
+- Combo positions `5+17` (`П+Е`) удерживает этот слой с `slow-release`; английский Smiles combo на тех же позициях имеет отдельный scope.
+
+## Настройка и синхронизация языка хоста
+
+На каждом хосте требуется назначить:
+
+- `Ctrl+Shift+1` — выбрать английскую раскладку;
+- `Ctrl+Shift+2` — выбрать Russian–PC.
+
+Windows, macOS и Linux настраиваются средствами самой ОС; на macOS допустимо использовать Hammerspoon, как в исходной конфигурации. Прошивка не определяет язык автоматически и не хранит его во flash. Если язык был изменён мышью, другой клавиатурой или после reboot хоста, повторное направленное действие `→RU`/`→ENG` снова задаёт ожидаемую пару host language + ZMK layer.
+
+## Временное поведение русского Caps Word
+
+В `continue-list` встроенного `&caps_word` добавлены HID usages букв `Х`, `Ъ`, `Ж`, `Э`, `Б`, `Ю`, `Ё`. Поэтому эти буквы не завершают режим. Однако ZMK v0.3 автоматически добавляет Shift только к usages `A`–`Z`, поэтому обычный tap этих семи позиций остаётся строчным. Остальные русские буквы капитализируются; для всех 33 букв можно использовать Caps Lock.
+
+Полная поддержка всех русских букв отложена в следующий OpenSpec change `implement-russian-caps-word`, который будет создан после аппаратной проверки этой миграции.

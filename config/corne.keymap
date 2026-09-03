@@ -19,9 +19,12 @@
 #define SYMBOLS 6
 #define SMILES 7
 #define SYSTEM_BT 8
-#define STUDIO_EXTRA_1 9
-#define STUDIO_EXTRA_2 10
-#define STUDIO_EXTRA_3 11
+#define RUSSIAN 9
+#define RUSSIAN_SYMBOLS 10
+#define RUSSIAN_SMILES 11
+#define STUDIO_EXTRA_1 12
+#define STUDIO_EXTRA_2 13
+#define STUDIO_EXTRA_3 14
 
 // Tap a letter normally; hold it for 250 ms to send Left Shift + letter.
 #define AS(keycode) &as LS(keycode) keycode
@@ -29,6 +32,12 @@
 // Match QMK quick-tap repeat behavior for layer-tap keys.
 &lt {
         quick-tap-ms = <250>;
+};
+
+// Keep Caps Word active across Russian-PC punctuation-backed letters.
+// ZMK only auto-shifts HID A-Z, so Х Ъ Ж Э Б Ю Ё remain lowercase until a custom behavior is added.
+&caps_word {
+        continue-list = <UNDERSCORE BACKSPACE DELETE LBKT RBKT SEMI SQT COMMA DOT GRAVE>;
 };
 
 / {
@@ -55,6 +64,24 @@
         };
 
         macros {
+                // Select Russian-PC on the host with Ctrl+Shift+2, then activate the Russian base layer.
+                to_russian: to_russian {
+                        compatible = "zmk,behavior-macro";
+                        #binding-cells = <0>;
+                        wait-ms = <40>;
+                        tap-ms = <40>;
+                        bindings = <&kp LC(LS(N2)) &to RUSSIAN>;
+                };
+
+                // Select English on the host with Ctrl+Shift+1, then return to the Graphite base layer.
+                to_english: to_english {
+                        compatible = "zmk,behavior-macro";
+                        #binding-cells = <0>;
+                        wait-ms = <40>;
+                        tap-ms = <40>;
+                        bindings = <&kp LC(LS(N1)) &to GRAPHITE>;
+                };
+
                 // Clears the active Bluetooth profile; invoked only after a protected hold.
                 bt_clear_macro: bt_clear_macro {
                         compatible = "zmk,behavior-macro";
@@ -279,23 +306,57 @@
                         tap-ms = <40>;
                         bindings = <&kp COLON &kp MINUS &kp LS(E)>;
                 };
+
+                // Russian-PC smile from Oryx ST_MACRO_35: types ":)" with Shift+6, Shift+0.
+                russian_smile_happy: russian_smile_happy {
+                        compatible = "zmk,behavior-macro";
+                        #binding-cells = <0>;
+                        wait-ms = <10>;
+                        tap-ms = <10>;
+                        bindings = <&kp LS(N6) &kp LS(N0)>;
+                };
+
+                // Russian-PC sad smile from Oryx ST_MACRO_36: types ":(" with Shift+6, Shift+9.
+                russian_smile_sad: russian_smile_sad {
+                        compatible = "zmk,behavior-macro";
+                        #binding-cells = <0>;
+                        wait-ms = <10>;
+                        tap-ms = <10>;
+                        bindings = <&kp LS(N6) &kp LS(N9)>;
+                };
         };
 
         combos {
                 compatible = "zmk,combos";
 
+                // Graphite F+O+U: select Russian-PC on the host and activate the Russian layer.
+                to_russian_combo {
+                        timeout-ms = <50>;
+                        key-positions = <7 8 9>;
+                        bindings = <&to_russian>;
+                        layers = <GRAPHITE>;
+                };
+
+                // Russian Г+Ш+Щ: select English on the host and return to Graphite.
+                to_english_combo {
+                        timeout-ms = <50>;
+                        key-positions = <7 8 9>;
+                        bindings = <&to_english>;
+                        layers = <RUSSIAN>;
+                };
+
                 enter_combo {
                         timeout-ms = <50>;
                         key-positions = <19 20 21>;
                         bindings = <&kp RET>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 tab_combo {
                         timeout-ms = <50>;
                         key-positions = <14 15 16>;
                         bindings = <&kp TAB>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx N+S: toggle Caps Word on the base layer.
@@ -303,7 +364,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 16>;
                         bindings = <&caps_word>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx N+G: toggle Caps Lock on the base layer.
@@ -311,7 +372,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 17>;
                         bindings = <&kp CAPSLOCK>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx 7+8+9: type minus on the Numbers layer.
@@ -363,6 +424,15 @@
                         slow-release;
                 };
 
+                // Oryx Russian П+Е: hold the Russian Smiles layer.
+                russian_smiles_layer_combo {
+                        timeout-ms = <50>;
+                        key-positions = <5 17>;
+                        bindings = <&mo RUSSIAN_SMILES>;
+                        layers = <RUSSIAN>;
+                        slow-release;
+                };
+
                 // Oryx H+I: activate the Vim layer for one keypress.
                 vim_layer_combo {
                         timeout-ms = <50>;
@@ -376,7 +446,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 25>;
                         bindings = <&kp LALT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -385,7 +455,7 @@
                         timeout-ms = <50>;
                         key-positions = <14 26>;
                         bindings = <&kp LGUI>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -394,7 +464,7 @@
                         timeout-ms = <50>;
                         key-positions = <15 27>;
                         bindings = <&kp LSHIFT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -403,7 +473,7 @@
                         timeout-ms = <50>;
                         key-positions = <16 28>;
                         bindings = <&kp LCTRL>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -412,7 +482,7 @@
                         timeout-ms = <50>;
                         key-positions = <19 31>;
                         bindings = <&kp RCTRL>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -421,7 +491,7 @@
                         timeout-ms = <50>;
                         key-positions = <20 32>;
                         bindings = <&kp RSHIFT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -430,7 +500,7 @@
                         timeout-ms = <50>;
                         key-positions = <21 33>;
                         bindings = <&kp RGUI>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -439,7 +509,7 @@
                         timeout-ms = <50>;
                         key-positions = <22 34>;
                         bindings = <&kp RALT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                         slow-release;
                 };
 
@@ -448,7 +518,7 @@
                         timeout-ms = <50>;
                         key-positions = <2 14>;
                         bindings = <&os_action OS_ACTION_COPY>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx T+D: OS-aware Paste.
@@ -456,7 +526,7 @@
                         timeout-ms = <50>;
                         key-positions = <3 15>;
                         bindings = <&os_action OS_ACTION_PASTE>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx R+L+T+D: OS-aware Cut.
@@ -464,7 +534,7 @@
                         timeout-ms = <50>;
                         key-positions = <2 3 14 15>;
                         bindings = <&os_action OS_ACTION_CUT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx A+O: OS-aware Undo.
@@ -472,7 +542,7 @@
                         timeout-ms = <50>;
                         key-positions = <8 20>;
                         bindings = <&os_action OS_ACTION_UNDO>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx E+U: OS-aware Redo.
@@ -480,7 +550,7 @@
                         timeout-ms = <50>;
                         key-positions = <9 21>;
                         bindings = <&os_action OS_ACTION_REDO>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx Y+H+A: OS-aware voice command.
@@ -488,7 +558,7 @@
                         timeout-ms = <50>;
                         key-positions = <18 19 20>;
                         bindings = <&os_action OS_ACTION_VOICE>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx N+R+T: OS-aware deletion of the previous word.
@@ -496,7 +566,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 14 15>;
                         bindings = <&os_action OS_ACTION_WORD_BACKSPACE>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx A+E+I: OS-aware deletion of the next word.
@@ -504,7 +574,7 @@
                         timeout-ms = <50>;
                         key-positions = <20 21 22>;
                         bindings = <&os_action OS_ACTION_WORD_DELETE>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx Q+X+M: OS-aware movement to the previous word.
@@ -512,7 +582,7 @@
                         timeout-ms = <50>;
                         key-positions = <25 26 27>;
                         bindings = <&os_action OS_ACTION_WORD_PREVIOUS>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx F22+F23+F24 positions: OS-aware movement to the next word.
@@ -520,7 +590,7 @@
                         timeout-ms = <50>;
                         key-positions = <32 33 34>;
                         bindings = <&os_action OS_ACTION_WORD_NEXT>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx H+A+E+I: OS-aware application switcher.
@@ -528,7 +598,7 @@
                         timeout-ms = <50>;
                         key-positions = <19 20 21 22>;
                         bindings = <&os_action OS_ACTION_APP_SWITCH>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx N+R+T+S: OS-aware task view.
@@ -536,7 +606,7 @@
                         timeout-ms = <50>;
                         key-positions = <13 14 15 16>;
                         bindings = <&os_action OS_ACTION_TASK_VIEW>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
 
                 // Oryx N+B: OS-aware Select All.
@@ -544,7 +614,7 @@
                         timeout-ms = <50>;
                         key-positions = <1 13>;
                         bindings = <&os_action OS_ACTION_SELECT_ALL>;
-                        layers = <GRAPHITE QWERTY>;
+                        layers = <GRAPHITE QWERTY RUSSIAN>;
                 };
         };
 
@@ -561,7 +631,7 @@
                         bindings = <
    &kp ESC AS(B) AS(L) AS(D) AS(W) AS(Z)   &kp KP_NUMLOCK AS(F) AS(O) AS(U) AS(J) &none
    &none AS(N) AS(R) AS(T) AS(S) AS(G)   AS(Y) AS(H) AS(A) AS(E) AS(I) &none
-   &none AS(Q) AS(X) AS(M) AS(C) AS(V)   AS(K) AS(P) &none &none &none &to QWERTY
+   &to_russian AS(Q) AS(X) AS(M) AS(C) AS(V)   AS(K) AS(P) &none &none &none &to QWERTY
                   &mo SYSTEM_BT &lt SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
                         >;
                 };
@@ -682,6 +752,53 @@
    &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none   &none &none &none &none &none &none
    &none &none &none &none &none &none                                          &none &os_set OS_WINDOWS &os_set OS_MACOS &os_set OS_LINUX &none &none
    &bt_clear_hold 0 0 &none &none &none &none &none                             &none &none &none &none &none &none
+                  &trans &trans &trans   &trans &trans &trans
+                        >;
+                };
+
+                russian_layer {
+// -------------------------------------------------------------------------------------------------
+// |  ESC* |  Й  |  Ц  |  У  |  К  |  Е  |   |  Н  |  Г  |  Ш  |  Щ  |  З  |  Х  |
+// |       |  Ф  |  Ы  |  В  |  А  |  П  |   |  Р  |  О  |  Л  |  Д  |  Ж  |  Э  |
+// |  ENG  |  Я  |  Ч  |  С  |  М  |  И  |   |  Т  |  Ь  |  Б  |  Ю  |  Ё  |  Ъ  |
+//               | SYSTEM | BSP/RU-SYM | DEL/NUM |   | TAB/FN | SPC/NAV |       |
+// * position 0 is transparent and inherits Escape from Graphite.
+                        display-name = "Russian";
+                        bindings = <
+   &trans AS(Q) AS(W) AS(E) AS(R) AS(T)   AS(Y) AS(U) AS(I) AS(O) AS(P) AS(LBKT)
+   &trans AS(A) AS(S) AS(D) AS(F) AS(G)   AS(H) AS(J) AS(K) AS(L) AS(SEMI) AS(SQT)
+   &to_english AS(Z) AS(X) AS(C) AS(V) AS(B)   AS(N) AS(M) AS(COMMA) AS(DOT) AS(GRAVE) AS(RBKT)
+                  &mo SYSTEM_BT &lt RUSSIAN_SYMBOLS BSPC &lt NUMBERS DEL   &lt FUNCTION TAB &lt NAVIGATION SPACE &none
+                        >;
+                };
+
+                russian_symbols_layer {
+// -------------------------------------------------------------------------------------------------
+// |     |     |     |  (  |  )  |     |   |  №  |  _  |  -  |  /  |  \\  |  -  |
+// |     |     |     |     |     |     |   |     |  .  |  ,  |  !  |  ?  |  /  |
+// |     |     |     |     |     |     |   |     |  "  |  :  |  ;  |  =  |  *  |
+//                    |     |     |     |   |     | SPC/RU-SMILES |     |
+// Bindings preserve QMK HID usages and rely on Russian-PC on the host.
+                        display-name = "Russian Symbols";
+                        bindings = <
+   &none &none &none &kp LS(N9) &kp LS(N0) &none   &kp LS(N3) &kp LS(MINUS) &kp MINUS &kp LS(BSLH) &kp BSLH &kp MINUS
+   &none &none &none &none &none &none              &none &kp FSLH &kp LS(FSLH) &kp LS(N1) &kp LS(N7) &kp LS(BSLH)
+   &none &none &none &none &none &none              &none &kp LS(N2) &kp LS(N6) &kp LS(N4) &kp EQUAL &kp LS(N8)
+                  &trans &trans &trans   &trans &lt RUSSIAN_SMILES SPACE &trans
+                        >;
+                };
+
+                russian_smiles_layer {
+// -------------------------------------------------------------------------------------------------
+// |     |     |     |     |     |     |   |     |     |     |     |     |     |
+// |     |     |     |     |     |     |   |     |  :) |  :( |     |     |     |
+// |     |     |     |     |     |     |   |     |     |     |     |     |     |
+//                    |     |     |     |   |     |     |     |
+                        display-name = "Russian Smiles";
+                        bindings = <
+   &none &none &none &none &none &none   &none &none &none &none &none &none
+   &none &none &none &none &none &none   &none &russian_smile_happy &russian_smile_sad &none &none &none
+   &none &none &none &none &none &none   &none &none &none &none &none &none
                   &trans &trans &trans   &trans &trans &trans
                         >;
                 };
