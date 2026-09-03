@@ -24,12 +24,10 @@
 
 | Конфигурация | Ожидаемый результат | Статус | Evidence |
 |---|---|---|---|
-| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310443](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310443), West Build/Kconfig/Devicetree/artifact pass |
-| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | Russian migration commit `6f2c898`; [job 100582310482](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33734651351/job/100582310482), West Build/Kconfig/Devicetree/artifact pass |
+| `nice_nano_v2 + corne_left + nice_view_adapter + nice_view + studio-rpc-usb-uart` | успешная UF2 сборка | pass | Thumb/Auto Shift fix commit `dc0d314`; [job 100755821232](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468/job/100755821232), West Build/Kconfig/Devicetree/artifact pass |
+| `nice_nano_v2 + corne_right + nice_view_adapter + nice_view` | успешная UF2 сборка | pass | Thumb/Auto Shift fix commit `dc0d314`; [job 100755821337](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468/job/100755821337), West Build/Kconfig/Devicetree/artifact pass |
 
-Run `33734651351` относится к change `migrate-russian-layers`; обе UF2 включены в объединённый firmware artifact.
-
-Для `fix-russian-thumb-layer-priority` требуется отдельная повторная сборка: предыдущий CI подтверждает синтаксис исходной миграции, но не новое расположение nodes.
+PR run [`33787520468`](https://github.com/tpaktop77/tpaktop-corne-wireless-view-zmk-config/actions/runs/33787520468) относится к change `fix-russian-thumb-layer-priority`; обе UF2 включены в объединённый firmware artifact.
 
 ## Layout и переключение
 

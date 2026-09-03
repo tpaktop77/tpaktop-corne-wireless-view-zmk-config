@@ -12,8 +12,8 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | — | new | Corne body | минимальный QWERTY | `QWERTY` 1 | 0–35 | letters/none + `&to GRAPHITE` | implemented; CI pass | layout audit + hardware |
 | `6JP4n/keymap.c` | 0 | Graphite bottom-right | `TT(2)` в QMK | `GRAPHITE` | 35 | `&to QWERTY` | implemented; CI pass | manual switch |
 | — | new | QWERTY bottom-right | возврат | `QWERTY` | 35 | `&to GRAPHITE` | implemented; CI pass | manual switch |
-| `6JP4n/keymap.c` | 0/1 | thumbs | layer taps | `GRAPHITE`, `QWERTY`, `RUSSIAN` | 36–41 | System; BSP/language Symbols; DEL/Numbers; TAB/Function; Space/Navigation; none | priority fix implemented; build pending | static priority audit + manual USB/BLE |
-| `6JP4n/keymap.c` | 1 | три нижних ряда | Russian–PC body | `RUSSIAN` 2 | 0–41 | русская база ниже всех доступных с неё overlay | priority fix implemented; build pending | node-order audit + manual thumbs |
+| `6JP4n/keymap.c` | 0/1 | thumbs | layer taps | `GRAPHITE`, `QWERTY`, `RUSSIAN` | 36–41 | System; BSP/language Symbols; DEL/Numbers; TAB/Function; Space/Navigation; none | priority fix implemented; CI pass | static priority audit + manual USB/BLE |
+| `6JP4n/keymap.c` | 1 | три нижних ряда | Russian–PC body | `RUSSIAN` 2 | 0–41 | русская база ниже всех доступных с неё overlay | priority fix implemented; CI pass | node-order audit + manual thumbs |
 | `6JP4n/keymap.c` | 3 | три нижних ряда | Numbers | `NUMBERS` 3 | 0–41 | сохранён, ссылки именованы | implemented; CI pass | build + manual |
 | `6JP4n/keymap.c` | 4 | три нижних ряда | Navigation/media | `NAVIGATION` 4 | 0–41 | migrated, OS adaptation deferred | implemented; CI pass | build + regression |
 | `6JP4n/keymap.c` | 5 | три нижних ряда | Function | `FUNCTION` 5 | 0–41 | сохранён, VIM ref исправлен | implemented; CI pass | build + manual |
@@ -22,7 +22,7 @@ Reference source: `tpaktop77/oryx-with-custom-qmk`, remote `main@5d674ed4d866b66
 | `6JP4n/keymap.c` | 9 | три нижних ряда | English Smiles | `SMILES` 8 | 0–41 | сохранён | implemented; CI pass | build + manual |
 | prior ZMK Lower + new | — | left/right body | BT + OS controls | `SYSTEM_BT` 11 | 0–35 | BT0–BT4, protected clear, OS selectors 19–21 | implemented; CI pass | build + manual |
 | target Studio | — | reserved nodes | editable capacity | 12–14 | n/a | три `status = "reserved"` после русских слоёв | implemented; CI pass | Studio connect + build |
-| `6JP4n/config.h` | global | English/Russian letters | QMK Auto Shift 200 ms | `GRAPHITE`, `QWERTY`, `RUSSIAN` | all letter positions | ZMK hold-tap Auto Shift 300 ms; thumb `&lt.quick-tap-ms` остаётся 250 мс | tuned; build pending | false-positive + intentional hold USB/BLE |
+| `6JP4n/config.h` | global | English/Russian letters | QMK Auto Shift 200 ms | `GRAPHITE`, `QWERTY`, `RUSSIAN` | all letter positions | ZMK hold-tap Auto Shift 300 ms; thumb `&lt.quick-tap-ms` остаётся 250 мс | tuned; CI pass | false-positive + intentional hold USB/BLE |
 
 ## Русский базовый слой
 
